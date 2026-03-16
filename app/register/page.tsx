@@ -216,19 +216,78 @@ export default function Register() {
         </div>
       </div>
 
-      {/* Right Panel - Only on Desktop */}
-      <div className="hidden lg:flex lg:w-1/2 bg-blue-50 items-center justify-center p-12 xl:p-16">
+      {/* Right Panel - Info - Only on Desktop */}
+      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-blue-50 via-blue-100 to-indigo-50 items-center justify-center p-12 xl:p-16">
         <div className="max-w-lg">
-          <h2 className="text-3xl xl:text-4xl font-bold text-gray-900 mb-5 leading-tight">
-            En UDHI queremos que elijas bien
-          </h2>
-          <p className="text-lg text-gray-600 mb-8 leading-relaxed">
-            No la carrera más popular, ni la que te dijeron. La que va contigo. Por eso diseñamos este test: para que explores tus intereses y descubras qué camino profesional se alinea con tu forma de pensar y actuar.
-          </p>
-          <div className="space-y-3 text-gray-700">
-            <p className="flex items-start gap-2"><span className="text-[#1565C0] font-bold">→</span> Basado en el modelo RIASEC de Holland</p>
-            <p className="flex items-start gap-2"><span className="text-[#1565C0] font-bold">→</span> Personalizado con las carreras UDHI</p>
-            <p className="flex items-start gap-2"><span className="text-[#1565C0] font-bold">→</span> 20 minutos que pueden cambiar tu perspectiva</p>
+          <div className="mb-8">
+            <div className="inline-flex items-center gap-2 bg-white px-4 py-2 rounded-full shadow-md mb-6 border border-gray-200">
+              <div className="w-2 h-2 bg-[#1565C0] rounded-full animate-pulse"></div>
+              <span className="text-sm font-semibold text-gray-700">Test Científicamente Validado</span>
+            </div>
+            <h2 className="text-4xl font-bold text-gray-900 mb-4">
+              Descubre tu vocación profesional
+            </h2>
+            <p className="text-lg text-gray-600">
+              Basado en el modelo RIASEC de Holland, el método más utilizado en orientación vocacional a nivel mundial.
+            </p>
+          </div>
+
+          <div className="space-y-6">
+            <div className="flex gap-4 group hover:translate-x-1 transition-transform duration-200">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-[#1565C0] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                </div>
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 mb-1">80 preguntas validadas científicamente</h3>
+                <p className="text-gray-700">Evaluación profesional con validación de consistencia</p>
+              </div>
+            </div>
+
+            <div className="flex gap-4 group hover:translate-x-1 transition-transform duration-200">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-[#1565C0] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
+                  </svg>
+                </div>
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 mb-1">Análisis personalizado</h3>
+                <p className="text-gray-700">Código Holland, perfil vocacional y carreras UDHI compatibles</p>
+              </div>
+            </div>
+
+            <div className="flex gap-4 group hover:translate-x-1 transition-transform duration-200">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-[#1565C0] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 mb-1">18-25 minutos</h3>
+                <p className="text-gray-700">Tiempo óptimo - Responde con honestidad y atención</p>
+              </div>
+            </div>
+
+            <div className="flex gap-4 group hover:translate-x-1 transition-transform duration-200">
+              <div className="flex-shrink-0">
+                <div className="w-12 h-12 bg-[#1565C0] rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
+                  <svg className="w-6 h-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 mb-1">Resultados por email</h3>
+                <p className="text-gray-700">Recibe tu informe completo en tu correo</p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
