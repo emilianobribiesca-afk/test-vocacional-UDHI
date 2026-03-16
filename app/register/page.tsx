@@ -217,40 +217,13 @@ export default function Register() {
       </div>
 
       {/* Right Panel - Only on Desktop */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-[#0a1628] via-[#0D47A1] to-[#1565C0] items-center justify-center p-12 xl:p-16">
-        <div className="max-w-lg">
-          <h2 className="text-4xl xl:text-5xl font-bold text-white mb-6 leading-tight">
-            En UDHI queremos que elijas bien
+      <div className="hidden lg:flex lg:w-1/2 bg-[#0D47A1] items-end justify-start p-12 xl:p-16">
+        <div className="max-w-md">
+          <p className="text-blue-300 text-sm font-medium mb-4">Modelo RIASEC de Holland · 80 preguntas · 20 min</p>
+          <h2 className="text-3xl xl:text-4xl font-bold text-white leading-snug">
+            No la carrera más popular.<br />
+            La que va contigo.
           </h2>
-          <p className="text-lg text-blue-200 mb-10 leading-relaxed">
-            No la carrera más popular, ni la que te dijeron. La que va contigo. Por eso diseñamos este test: para que explores tus intereses y descubras qué camino profesional se alinea con tu forma de pensar y actuar.
-          </p>
-
-          <div className="space-y-5">
-            <div className="flex items-start gap-4">
-              <div className="w-1 h-full min-h-[40px] bg-blue-400 rounded-full flex-shrink-0"></div>
-              <div>
-                <h3 className="font-semibold text-white mb-1">Basado en el modelo RIASEC de Holland</h3>
-                <p className="text-sm text-blue-300">El método más utilizado en orientación vocacional a nivel mundial</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="w-1 h-full min-h-[40px] bg-blue-400 rounded-full flex-shrink-0"></div>
-              <div>
-                <h3 className="font-semibold text-white mb-1">Personalizado con las carreras UDHI</h3>
-                <p className="text-sm text-blue-300">Te mostramos qué carreras de UDHI conectan con tu forma de ser</p>
-              </div>
-            </div>
-
-            <div className="flex items-start gap-4">
-              <div className="w-1 h-full min-h-[40px] bg-blue-400 rounded-full flex-shrink-0"></div>
-              <div>
-                <h3 className="font-semibold text-white mb-1">20 minutos que pueden cambiar tu perspectiva</h3>
-                <p className="text-sm text-blue-300">Sin respuestas correctas o incorrectas. Solo sé honesto contigo</p>
-              </div>
-            </div>
-          </div>
         </div>
       </div>
     </div>
