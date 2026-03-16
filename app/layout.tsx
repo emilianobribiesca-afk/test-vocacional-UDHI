@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Test Vocacional UDHI | Universidad para el Desarrollo Humano e Integral",
+  title: "Test Vocacional UDHI | Universidad de Dolores Hidalgo",
   description: "Test vocacional profesional basado en el modelo RIASEC de Holland. Descubre tu vocación y las carreras UDHI más compatibles con tu perfil.",
   icons: {
     icon: '/icon.svg',

@@ -1,8 +1,8 @@
-// Test Vocacional Profesional V3 - 60 Preguntas de Alta Calidad
-// Basado en O*NET Interest Profiler y Strong Interest Inventory
-// Preguntas claras, específicas y discriminantes
+// Test Vocacional Profesional V3 - 72 Preguntas RIASEC + 8 Control
+// Basado en O*NET Interest Profiler, SDS, validaciones mexicanas
+// 12 items por dimensión (4 actividades + 4 competencias + 4 ocupaciones)
 
-import { udhiCareers, UDHICareer } from './udhiCareers';
+import { udhiCareers, UDHICareer, calculateCareerMatch } from './udhiCareers';
 
 export type RIASECType = 'R' | 'I' | 'A' | 'S' | 'E' | 'C';
 
@@ -12,6 +12,9 @@ export type Question = {
   category: RIASECType;
   isControl?: boolean;
   consistencyPair?: number;
+  domain?: 'activity' | 'competency' | 'occupation';
+  controlType?: 'infrequency' | 'directed';
+  directedResponse?: LikertScale;
 };
 
 export type LikertScale = 1 | 2 | 3 | 4 | 5;
@@ -20,121 +23,146 @@ export type TestAnswers = {
   [questionId: number]: LikertScale;
 };
 
-// ==================== 60 PREGUNTAS DE ALTA CALIDAD ====================
-// 10 preguntas por dimensión RIASEC
-// Basadas en O*NET Interest Profiler y Strong Interest Inventory
+// ==================== 72 PREGUNTAS RIASEC + 8 CONTROL ====================
+// 12 preguntas por dimensión: 4 actividades + 4 competencias + 4 ocupaciones
 
 export const professionalQuestions: Question[] = [
-  // ==================== REALISTIC (R) - 10 preguntas ====================
-  // Enfoque: Trabajo manual, mecánico, técnico, al aire libre
+  // ==================== REALISTIC (R) - IDs 1-12 ====================
+  { id: 1, text: 'Me gustaría reparar el motor de un automóvil', category: 'R', domain: 'activity' },
+  { id: 2, text: 'Me gustaría cultivar hortalizas en un terreno agrícola', category: 'R', domain: 'activity' },
+  { id: 3, text: 'Me gustaría armar un mueble de madera con herramientas manuales', category: 'R', domain: 'activity' },
+  { id: 4, text: 'Me gustaría cablear una instalación eléctrica en una casa', category: 'R', domain: 'activity' },
+  { id: 5, text: 'Soy bueno/a resolviendo fallas en aparatos electrónicos', category: 'R', domain: 'competency' },
+  { id: 6, text: 'Soy bueno/a usando herramientas como taladro, sierra o soldadora', category: 'R', domain: 'competency' },
+  { id: 7, text: 'Soy bueno/a armando y desarmando objetos mecánicos', category: 'R', domain: 'competency' },
+  { id: 8, text: 'Soy bueno/a realizando actividades que requieren fuerza o resistencia física', category: 'R', domain: 'competency' },
+  { id: 9, text: 'Me gustaría trabajar como técnico de mantenimiento industrial', category: 'R', domain: 'occupation' },
+  { id: 10, text: 'Me gustaría trabajar como operador de maquinaria de construcción', category: 'R', domain: 'occupation' },
+  { id: 11, text: 'Me gustaría trabajar como electricista o plomero profesional', category: 'R', domain: 'occupation' },
+  { id: 12, text: 'Me gustaría trabajar como mecánico automotriz', category: 'R', domain: 'occupation' },
 
-  { id: 1, text: 'Reparar equipos electrónicos usando herramientas especializadas', category: 'R' },
-  { id: 2, text: 'Ensamblar maquinaria o instalar sistemas técnicos', category: 'R' },
-  { id: 3, text: 'Diseñar y construir estructuras físicas o prototipos', category: 'R' },
-  { id: 4, text: 'Operar equipo pesado o maquinaria industrial', category: 'R' },
-  { id: 5, text: 'Realizar mantenimiento preventivo a instalaciones o vehículos', category: 'R' },
-  { id: 6, text: 'Trabajar con planos técnicos para proyectos de construcción', category: 'R' },
-  { id: 7, text: 'Instalar y configurar sistemas eléctricos o de plomería', category: 'R', consistencyPair: 5 },
-  { id: 8, text: 'Fabricar objetos usando materiales como madera, metal o plástico', category: 'R' },
-  { id: 9, text: 'Diagnosticar y solucionar problemas mecánicos complejos', category: 'R' },
-  { id: 10, text: 'Utilizar software CAD para diseño técnico tridimensional', category: 'R' },
+  // ==================== INVESTIGATIVE (I) - IDs 13-24 ====================
+  { id: 13, text: 'Me gustaría realizar experimentos en un laboratorio de ciencias', category: 'I', domain: 'activity' },
+  { id: 14, text: 'Me gustaría analizar datos estadísticos para encontrar patrones', category: 'I', domain: 'activity' },
+  { id: 15, text: 'Me gustaría observar organismos al microscopio', category: 'I', domain: 'activity' },
+  { id: 16, text: 'Me gustaría leer artículos de investigación sobre avances científicos', category: 'I', domain: 'activity' },
+  { id: 17, text: 'Soy bueno/a resolviendo problemas matemáticos complejos', category: 'I', domain: 'competency' },
+  { id: 18, text: 'Soy bueno/a formulando hipótesis y comprobándolas con evidencia', category: 'I', domain: 'competency' },
+  { id: 19, text: 'Soy bueno/a interpretando gráficas y tablas de datos', category: 'I', domain: 'competency' },
+  { id: 20, text: 'Soy bueno/a entendiendo cómo funcionan los procesos químicos o biológicos', category: 'I', domain: 'competency' },
+  { id: 21, text: 'Me gustaría trabajar como investigador/a en un centro de ciencias', category: 'I', domain: 'occupation' },
+  { id: 22, text: 'Me gustaría trabajar como analista de datos en una empresa', category: 'I', domain: 'occupation' },
+  { id: 23, text: 'Me gustaría trabajar como biólogo/a o químico/a', category: 'I', domain: 'occupation' },
+  { id: 24, text: 'Me gustaría trabajar como médico/a especialista en diagnóstico', category: 'I', domain: 'occupation' },
 
-  // ==================== INVESTIGATIVE (I) - 10 preguntas ====================
-  // Enfoque: Análisis, investigación, ciencia, resolución de problemas
+  // ==================== ARTISTIC (A) - IDs 25-36 ====================
+  { id: 25, text: 'Me gustaría pintar un cuadro o hacer una escultura', category: 'A', domain: 'activity' },
+  { id: 26, text: 'Me gustaría actuar en una obra de teatro o cortometraje', category: 'A', domain: 'activity' },
+  { id: 27, text: 'Me gustaría componer canciones o tocar un instrumento musical', category: 'A', domain: 'activity' },
+  { id: 28, text: 'Me gustaría escribir cuentos, poesía o guiones', category: 'A', domain: 'activity' },
+  { id: 29, text: 'Soy bueno/a combinando colores, formas y texturas en mis trabajos', category: 'A', domain: 'competency' },
+  { id: 30, text: 'Soy bueno/a expresando ideas o emociones a través del arte', category: 'A', domain: 'competency' },
+  { id: 31, text: 'Soy bueno/a tomando fotografías con composición artística', category: 'A', domain: 'competency' },
+  { id: 32, text: 'Soy bueno/a improvisando o creando algo original sin un plan rígido', category: 'A', domain: 'competency' },
+  { id: 33, text: 'Me gustaría trabajar como artista visual o ilustrador/a', category: 'A', domain: 'occupation' },
+  { id: 34, text: 'Me gustaría trabajar como músico/a, actor/actriz o bailarín/a', category: 'A', domain: 'occupation' },
+  { id: 35, text: 'Me gustaría trabajar como director/a de cine o productor/a audiovisual', category: 'A', domain: 'occupation' },
+  { id: 36, text: 'Me gustaría trabajar como chef creativo/a o estilista de moda', category: 'A', domain: 'occupation' },
 
-  { id: 11, text: 'Diseñar experimentos para probar hipótesis científicas', category: 'I' },
-  { id: 12, text: 'Analizar datos complejos para identificar patrones y tendencias', category: 'I' },
-  { id: 13, text: 'Estudiar procesos biológicos o químicos en laboratorio', category: 'I' },
-  { id: 14, text: 'Desarrollar modelos matemáticos para resolver problemas reales', category: 'I' },
-  { id: 15, text: 'Investigar nuevas tecnologías o métodos científicos', category: 'I', consistencyPair: 11 },
-  { id: 16, text: 'Programar algoritmos para análisis de información', category: 'I' },
-  { id: 17, text: 'Diagnosticar enfermedades mediante análisis clínico detallado', category: 'I' },
-  { id: 18, text: 'Realizar investigación documental profunda sobre temas especializados', category: 'I' },
-  { id: 19, text: 'Evaluar evidencia científica para llegar a conclusiones fundamentadas', category: 'I' },
-  { id: 20, text: 'Diseñar sistemas computacionales para resolver problemas técnicos', category: 'I' },
+  // ==================== SOCIAL (S) - IDs 37-48 ====================
+  { id: 37, text: 'Me gustaría enseñar una materia a un grupo de estudiantes', category: 'S', domain: 'activity' },
+  { id: 38, text: 'Me gustaría escuchar y aconsejar a una persona con problemas emocionales', category: 'S', domain: 'activity' },
+  { id: 39, text: 'Me gustaría organizar una campaña de salud en una comunidad rural', category: 'S', domain: 'activity' },
+  { id: 40, text: 'Me gustaría mediar un conflicto entre dos personas para llegar a un acuerdo', category: 'S', domain: 'activity' },
+  { id: 41, text: 'Soy bueno/a explicando temas difíciles de forma que otros los entiendan', category: 'S', domain: 'competency' },
+  { id: 42, text: 'Soy bueno/a haciendo que las personas se sientan escuchadas y comprendidas', category: 'S', domain: 'competency' },
+  { id: 43, text: 'Soy bueno/a trabajando en equipo y motivando a los demás', category: 'S', domain: 'competency' },
+  { id: 44, text: 'Soy bueno/a cuidando personas enfermas o con necesidades especiales', category: 'S', domain: 'competency' },
+  { id: 45, text: 'Me gustaría trabajar como maestro/a o capacitador/a', category: 'S', domain: 'occupation' },
+  { id: 46, text: 'Me gustaría trabajar como psicólogo/a o consejero/a', category: 'S', domain: 'occupation' },
+  { id: 47, text: 'Me gustaría trabajar como enfermero/a o terapeuta', category: 'S', domain: 'occupation' },
+  { id: 48, text: 'Me gustaría trabajar como trabajador/a social o defensor/a de derechos humanos', category: 'S', domain: 'occupation' },
 
-  // ==================== ARTISTIC (A) - 10 preguntas ====================
-  // Enfoque: Creatividad, diseño, expresión artística, innovación
+  // ==================== ENTERPRISING (E) - IDs 49-60 ====================
+  { id: 49, text: 'Me gustaría liderar un equipo para lograr un objetivo importante', category: 'E', domain: 'activity' },
+  { id: 50, text: 'Me gustaría convencer a un grupo de personas de apoyar un proyecto', category: 'E', domain: 'activity' },
+  { id: 51, text: 'Me gustaría negociar un contrato o acuerdo comercial', category: 'E', domain: 'activity' },
+  { id: 52, text: 'Me gustaría lanzar mi propio negocio o emprendimiento', category: 'E', domain: 'activity' },
+  { id: 53, text: 'Soy bueno/a tomando decisiones rápidas bajo presión', category: 'E', domain: 'competency' },
+  { id: 54, text: 'Soy bueno/a hablando en público y presentando ideas', category: 'E', domain: 'competency' },
+  { id: 55, text: 'Soy bueno/a detectando oportunidades donde otros no las ven', category: 'E', domain: 'competency' },
+  { id: 56, text: 'Soy bueno/a motivando a otros para que den su mejor esfuerzo', category: 'E', domain: 'competency' },
+  { id: 57, text: 'Me gustaría trabajar como gerente o director/a de una empresa', category: 'E', domain: 'occupation' },
+  { id: 58, text: 'Me gustaría trabajar como ejecutivo/a de ventas o marketing', category: 'E', domain: 'occupation' },
+  { id: 59, text: 'Me gustaría trabajar como político/a o líder de una organización', category: 'E', domain: 'occupation' },
+  { id: 60, text: 'Me gustaría trabajar como organizador/a de eventos o productor/a de espectáculos', category: 'E', domain: 'occupation' },
 
-  { id: 21, text: 'Crear diseños visuales originales para proyectos gráficos', category: 'A' },
-  { id: 22, text: 'Escribir contenido creativo como historias, guiones o artículos', category: 'A' },
-  { id: 23, text: 'Diseñar espacios interiores combinando estética y funcionalidad', category: 'A' },
-  { id: 24, text: 'Componer música o crear producciones audiovisuales', category: 'A' },
-  { id: 25, text: 'Desarrollar conceptos creativos para campañas publicitarias', category: 'A', consistencyPair: 21 },
-  { id: 26, text: 'Diseñar prendas de vestir, accesorios o productos estéticos', category: 'A' },
-  { id: 27, text: 'Crear ilustraciones digitales o animaciones para medios', category: 'A' },
-  { id: 28, text: 'Fotografiar eventos o realizar edición artística de imágenes', category: 'A' },
-  { id: 29, text: 'Diseñar experiencias de usuario innovadoras para aplicaciones', category: 'A' },
-  { id: 30, text: 'Dirigir proyectos creativos coordinando elementos visuales y narrativos', category: 'A' },
+  // ==================== CONVENTIONAL (C) - IDs 61-72 ====================
+  { id: 61, text: 'Me gustaría llevar el registro contable de ingresos y gastos de un negocio', category: 'C', domain: 'activity' },
+  { id: 62, text: 'Me gustaría clasificar y archivar documentos importantes en orden', category: 'C', domain: 'activity' },
+  { id: 63, text: 'Me gustaría revisar que un informe no tenga errores antes de entregarlo', category: 'C', domain: 'activity' },
+  { id: 64, text: 'Me gustaría preparar una hoja de cálculo con datos financieros', category: 'C', domain: 'activity' },
+  { id: 65, text: 'Soy bueno/a detectando errores en documentos o números', category: 'C', domain: 'competency' },
+  { id: 66, text: 'Soy bueno/a siguiendo instrucciones y procedimientos paso a paso', category: 'C', domain: 'competency' },
+  { id: 67, text: 'Soy bueno/a organizando información en carpetas, tablas o bases de datos', category: 'C', domain: 'competency' },
+  { id: 68, text: 'Soy bueno/a trabajando con precisión y sin saltar pasos', category: 'C', domain: 'competency' },
+  { id: 69, text: 'Me gustaría trabajar como contador/a o auditor/a', category: 'C', domain: 'occupation' },
+  { id: 70, text: 'Me gustaría trabajar como asistente administrativo/a o secretario/a ejecutivo/a', category: 'C', domain: 'occupation' },
+  { id: 71, text: 'Me gustaría trabajar como especialista en nóminas o impuestos', category: 'C', domain: 'occupation' },
+  { id: 72, text: 'Me gustaría trabajar como encargado/a de inventarios o control de calidad', category: 'C', domain: 'occupation' },
 
-  // ==================== SOCIAL (S) - 10 preguntas ====================
-  // Enfoque: Ayudar, enseñar, cuidar, orientar, trabajar con personas
-
-  { id: 31, text: 'Enseñar conceptos complejos de forma clara y motivadora', category: 'S' },
-  { id: 32, text: 'Proporcionar cuidados de salud y rehabilitación a pacientes', category: 'S' },
-  { id: 33, text: 'Orientar a personas en decisiones importantes de su vida', category: 'S' },
-  { id: 34, text: 'Facilitar grupos de trabajo para resolver conflictos', category: 'S' },
-  { id: 35, text: 'Capacitar equipos para mejorar sus habilidades profesionales', category: 'S', consistencyPair: 31 },
-  { id: 36, text: 'Trabajar directamente ayudando a personas vulnerables o enfermas', category: 'S' },
-  { id: 37, text: 'Planificar programas educativos adaptados a diferentes necesidades', category: 'S' },
-  { id: 38, text: 'Proporcionar terapia o apoyo psicológico a individuos', category: 'S' },
-  { id: 39, text: 'Organizar actividades comunitarias para beneficio social', category: 'S' },
-  { id: 40, text: 'Desarrollar materiales didácticos para facilitar el aprendizaje', category: 'S' },
-
-  // ==================== ENTERPRISING (E) - 10 preguntas ====================
-  // Enfoque: Liderazgo, ventas, negocios, persuasión, gestión
-
-  { id: 41, text: 'Dirigir equipos de trabajo hacia objetivos estratégicos', category: 'E' },
-  { id: 42, text: 'Negociar contratos y acuerdos comerciales importantes', category: 'E' },
-  { id: 43, text: 'Desarrollar estrategias de negocio para nuevos mercados', category: 'E' },
-  { id: 44, text: 'Presentar propuestas comerciales convincentes a clientes potenciales', category: 'E' },
-  { id: 45, text: 'Gestionar presupuestos y recursos para maximizar resultados', category: 'E' },
-  { id: 46, text: 'Identificar oportunidades de inversión y crecimiento empresarial', category: 'E', consistencyPair: 43 },
-  { id: 47, text: 'Coordinar proyectos complejos con múltiples stakeholders', category: 'E' },
-  { id: 48, text: 'Crear y lanzar nuevos productos o servicios al mercado', category: 'E' },
-  { id: 49, text: 'Supervisar operaciones para asegurar eficiencia y rentabilidad', category: 'E' },
-  { id: 50, text: 'Persuadir e influir en decisiones organizacionales estratégicas', category: 'E' },
-
-  // ==================== CONVENTIONAL (C) - 10 preguntas ====================
-  // Enfoque: Organización, datos, procedimientos, finanzas, administración
-
-  { id: 51, text: 'Organizar y mantener sistemas de información detallados', category: 'C' },
-  { id: 52, text: 'Realizar análisis financieros y preparar reportes contables', category: 'C' },
-  { id: 53, text: 'Verificar el cumplimiento de procedimientos y regulaciones', category: 'C' },
-  { id: 54, text: 'Administrar bases de datos y garantizar precisión de información', category: 'C', consistencyPair: 51 },
-  { id: 55, text: 'Preparar documentación legal y administrativa precisa', category: 'C' },
-  { id: 56, text: 'Procesar transacciones financieras con alto nivel de exactitud', category: 'C' },
-  { id: 57, text: 'Crear sistemas de archivo eficientes para gestión documental', category: 'C' },
-  { id: 58, text: 'Auditar procesos para identificar errores o inconsistencias', category: 'C' },
-  { id: 59, text: 'Implementar políticas y procedimientos organizacionales', category: 'C' },
-  { id: 60, text: 'Gestionar agendas y coordinar logística de eventos complejos', category: 'C' },
-
-  // ==================== PREGUNTAS DE CONTROL (INFRECUENCIA) ====================
-  { id: 61, text: 'He viajado personalmente a otro planeta', category: 'R', isControl: true },
-  { id: 62, text: 'Puedo comunicarme telepáticamente con animales', category: 'I', isControl: true },
-  { id: 63, text: 'Nunca he cometido ningún error en toda mi vida', category: 'S', isControl: true },
-  { id: 64, text: 'Puedo levitar objetos solo con mi mente', category: 'A', isControl: true },
-  { id: 65, text: 'He leído absolutamente todos los libros que existen', category: 'I', isControl: true },
-  { id: 66, text: 'Nunca me he sentido cansado o somnoliento', category: 'E', isControl: true },
+  // ==================== PREGUNTAS DE CONTROL (IDs 73-80) ====================
+  // Infrecuencia (73-78): respuesta esperada = 1
+  { id: 73, text: 'He viajado personalmente a otro planeta', category: 'R', isControl: true, controlType: 'infrequency' },
+  { id: 74, text: 'Puedo ver a través de las paredes con mi vista', category: 'I', isControl: true, controlType: 'infrequency' },
+  { id: 75, text: 'Puedo respirar debajo del agua sin ningún equipo', category: 'A', isControl: true, controlType: 'infrequency' },
+  { id: 76, text: 'He ganado una medalla olímpica en tres deportes diferentes', category: 'S', isControl: true, controlType: 'infrequency' },
+  { id: 77, text: 'Puedo comunicarme telepáticamente con animales', category: 'E', isControl: true, controlType: 'infrequency' },
+  { id: 78, text: 'He leído absolutamente todos los libros que existen', category: 'C', isControl: true, controlType: 'infrequency' },
+  // Respuesta dirigida (79-80)
+  { id: 79, text: 'Para esta pregunta selecciona \'Interesante\'', category: 'R', isControl: true, controlType: 'directed', directedResponse: 4 },
+  { id: 80, text: 'Para esta pregunta selecciona \'Algo interesante\'', category: 'I', isControl: true, controlType: 'directed', directedResponse: 3 },
 ];
 
-// Escala Likert 5 puntos
+// Orden de presentación intercalado (80 posiciones)
+// Nunca 2 items consecutivos de la misma dimensión
+// Control questions distribuidas en posiciones ~10, 20, 30, 40, 50, 60, 70, 80
+export const questionOrder: number[] = [
+  1, 13, 25, 37, 49, 61,     // Pos 1-6
+  5, 17, 73, 29,              // Pos 7-10 (CTRL-73 at pos 9)
+  41, 53, 65, 2, 14, 26,     // Pos 11-16
+  38, 50, 62, 74,             // Pos 17-20 (CTRL-74 at pos 20)
+  9, 21, 33, 45, 57, 69,     // Pos 21-26
+  6, 18, 30, 75,              // Pos 27-30 (CTRL-75 at pos 30)
+  42, 54, 66, 3, 15, 27,     // Pos 31-36
+  39, 51, 63, 76,             // Pos 37-40 (CTRL-76 at pos 40)
+  10, 22, 34, 46, 58, 70,    // Pos 41-46
+  7, 19, 31, 77,              // Pos 47-50 (CTRL-77 at pos 50)
+  43, 55, 67, 4, 16, 28,     // Pos 51-56
+  40, 52, 64, 78,             // Pos 57-60 (CTRL-78 at pos 60)
+  11, 23, 35, 47, 59, 71,    // Pos 61-66
+  8, 20, 44, 79,              // Pos 67-70 (CTRL-79 at pos 70)
+  56, 68, 12, 24, 36, 48,    // Pos 71-76
+  60, 72, 32, 80              // Pos 77-80 (CTRL-80 at pos 80)
+];
+
+// Escala Likert 5 puntos - Etiquetas de interés (Fix #3)
 export const likertOptions = [
-  { value: 1 as LikertScale, label: 'Totalmente en desacuerdo', shortLabel: 'Muy bajo' },
-  { value: 2 as LikertScale, label: 'En desacuerdo', shortLabel: 'Bajo' },
-  { value: 3 as LikertScale, label: 'Neutral', shortLabel: 'Neutral' },
-  { value: 4 as LikertScale, label: 'De acuerdo', shortLabel: 'Alto' },
-  { value: 5 as LikertScale, label: 'Totalmente de acuerdo', shortLabel: 'Muy alto' }
+  { value: 1 as LikertScale, label: 'Nada interesante', shortLabel: 'Nada' },
+  { value: 2 as LikertScale, label: 'Poco interesante', shortLabel: 'Poco' },
+  { value: 3 as LikertScale, label: 'Algo interesante', shortLabel: 'Algo' },
+  { value: 4 as LikertScale, label: 'Interesante', shortLabel: 'Interesante' },
+  { value: 5 as LikertScale, label: 'Muy interesante', shortLabel: 'Mucho' },
 ];
 
-// Pares de consistencia (preguntas que deberían tener respuestas similares)
+// Pares de consistencia
 export const consistencyPairs = [
-  { q1: 5, q2: 7, description: 'Ambas sobre mantenimiento técnico' },
-  { q1: 11, q2: 15, description: 'Ambas sobre investigación científica' },
-  { q1: 21, q2: 25, description: 'Ambas sobre diseño creativo' },
-  { q1: 31, q2: 35, description: 'Ambas sobre enseñanza' },
-  { q1: 43, q2: 46, description: 'Ambas sobre estrategia de negocios' },
-  { q1: 51, q2: 54, description: 'Ambas sobre organización de información' },
+  { q1: 1, q2: 7, description: 'Ambas sobre habilidades mecánicas (R)' },
+  { q1: 13, q2: 18, description: 'Ambas sobre método científico (I)' },
+  { q1: 25, q2: 30, description: 'Ambas sobre expresión artística (A)' },
+  { q1: 37, q2: 41, description: 'Ambas sobre enseñanza/explicación (S)' },
+  { q1: 49, q2: 56, description: 'Ambas sobre liderazgo/motivación (E)' },
+  { q1: 61, q2: 65, description: 'Ambas sobre precisión con datos (C)' },
 ];
 
 // ==================== TIPOS Y INTERFACES ====================
@@ -168,6 +196,7 @@ export interface ValidationResult {
     inconsistencyCount: number;
     responseVariance: number;
     completionTime?: number;
+    directedFailCount: number;
   };
 }
 
@@ -180,8 +209,10 @@ export interface DetailedResults {
     rawScore: number;
   }[];
   hollandCode: string;
+  alternativeHollandCodes?: string[];
   consistency: number;
   differentiation: number;
+  predigerDimensions?: { peopleVsThings: number; ideasVsData: number };
   primaryType: RIASECCategory;
   secondaryType: RIASECCategory;
   tertiaryType: RIASECCategory;
@@ -244,7 +275,7 @@ export const riasecCategories: RIASECCategory[] = [
     id: 'A',
     name: 'Artístico',
     fullName: 'Artístico (Creador)',
-    description: 'Personas creativas e innovadoras que valoran la expresión personal y la originalidad. Disfrutan crear, diseñar y trabajar en ambientes poco estructurados.',
+    description: 'Personas creativas e innovadoras que valoran la expresión personal y la originalidad. Disfrutan crear, diseñar y encontrar soluciones donde puedan aportar su visión propia.',
     characteristics: [
       'Creatividad e imaginación',
       'Pensamiento original',
@@ -322,12 +353,11 @@ export const riasecCategories: RIASECCategory[] = [
   }
 ];
 
-// Continúa en siguiente bloque con funciones de validación y cálculo...
 // ==================== FUNCIONES DE VALIDACIÓN ====================
 
 /**
- * Valida la calidad de las respuestas del test
- * Detecta: respuestas aleatorias, inconsistencias, falta de atención
+ * Valida la calidad de las respuestas del test (Fix #9)
+ * 6 items infrecuencia + 2 items respuesta dirigida
  */
 export function validateTestResponses(
   answers: TestAnswers,
@@ -335,25 +365,37 @@ export function validateTestResponses(
 ): ValidationResult {
   const warnings: string[] = [];
 
-  // 1. Validar preguntas de infrecuencia (control)
-  const controlQuestions = professionalQuestions.filter(q => q.isControl);
+  // 1. Validar preguntas de infrecuencia (IDs 73-78): flag si respuesta >= 4
+  const infrequencyQuestions = professionalQuestions.filter(q => q.controlType === 'infrequency');
   let infrequencyScore = 0;
 
-  controlQuestions.forEach(q => {
+  infrequencyQuestions.forEach(q => {
     const response = answers[q.id];
-    // Si responde 4 o 5 (de acuerdo/totalmente de acuerdo) a pregunta imposible
     if (response && response >= 4) {
       infrequencyScore++;
     }
   });
 
-  if (infrequencyScore >= 3) {
+  // 2. Validar respuesta dirigida (IDs 79-80): flag si no coincide exactamente
+  const directedQuestions = professionalQuestions.filter(q => q.controlType === 'directed');
+  let directedFailCount = 0;
+
+  directedQuestions.forEach(q => {
+    const response = answers[q.id];
+    if (response && q.directedResponse && response !== q.directedResponse) {
+      directedFailCount++;
+    }
+  });
+
+  // Umbral INVALID: >= 4 infrecuencia fails O >= 2 directed fails
+  // Umbral CAUTION: >= 2 infrecuencia fails O >= 1 directed fail
+  if (infrequencyScore >= 4 || directedFailCount >= 2) {
     warnings.push('INFREQUENCY_HIGH');
-  } else if (infrequencyScore >= 2) {
+  } else if (infrequencyScore >= 2 || directedFailCount >= 1) {
     warnings.push('INFREQUENCY_MODERATE');
   }
 
-  // 2. Validar consistencia interna (pares de preguntas similares)
+  // 3. Validar consistencia interna (pares de preguntas similares)
   let inconsistencyCount = 0;
 
   consistencyPairs.forEach(pair => {
@@ -362,7 +404,6 @@ export function validateTestResponses(
 
     if (resp1 && resp2) {
       const difference = Math.abs(resp1 - resp2);
-      // Si la diferencia es > 2 puntos, es inconsistente
       if (difference > 2) {
         inconsistencyCount++;
       }
@@ -375,8 +416,11 @@ export function validateTestResponses(
     warnings.push('INCONSISTENCY_MODERATE');
   }
 
-  // 3. Validar varianza de respuestas
-  const responses = Object.values(answers).filter(r => r !== undefined);
+  // 4. Validar varianza de respuestas (solo regulares)
+  const regularQuestions = professionalQuestions.filter(q => !q.isControl);
+  const responses = regularQuestions
+    .map(q => answers[q.id])
+    .filter((r): r is LikertScale => r !== undefined);
   const mean = responses.reduce((sum, r) => sum + r, 0) / responses.length;
   const variance = responses.reduce((sum, r) => sum + Math.pow(r - mean, 2), 0) / responses.length;
 
@@ -384,7 +428,7 @@ export function validateTestResponses(
     warnings.push('LOW_VARIANCE');
   }
 
-  // 4. Detectar aquiescence bias (tendencia a responder siempre positivo/negativo)
+  // 5. Detectar acquiescence bias
   const highResponses = responses.filter(r => r >= 4).length;
   const lowResponses = responses.filter(r => r <= 2).length;
   const totalResponses = responses.length;
@@ -395,15 +439,15 @@ export function validateTestResponses(
     warnings.push('ACQUIESCENCE_LOW');
   }
 
-  // 5. Validar tiempo de completación (si está disponible)
+  // 6. Validar tiempo de completación
   let completionTime: number | undefined;
   if (timeData) {
-    completionTime = (timeData.endTime - timeData.startTime) / 1000; // segundos
+    completionTime = (timeData.endTime - timeData.startTime) / 1000;
     const avgTimePerItem = completionTime / Object.keys(answers).length;
 
     if (avgTimePerItem < 3) {
       warnings.push('TOO_FAST');
-    } else if (completionTime > 3600) { // 1 hora
+    } else if (completionTime > 3600) {
       warnings.push('TOO_SLOW');
     }
   }
@@ -411,12 +455,14 @@ export function validateTestResponses(
   // Determinar recomendación final
   let recommendation: 'VALID' | 'CAUTION' | 'INVALID';
 
-  if (warnings.length === 0) {
-    recommendation = 'VALID';
-  } else if (warnings.length <= 2 && !warnings.includes('INFREQUENCY_HIGH') && !warnings.includes('INCONSISTENCY_HIGH')) {
-    recommendation = 'CAUTION';
-  } else {
+  if (infrequencyScore >= 4 || directedFailCount >= 2) {
     recommendation = 'INVALID';
+  } else if (infrequencyScore >= 2 || directedFailCount >= 1 || warnings.length > 2) {
+    recommendation = 'CAUTION';
+  } else if (warnings.length === 0) {
+    recommendation = 'VALID';
+  } else {
+    recommendation = 'CAUTION';
   }
 
   return {
@@ -427,84 +473,120 @@ export function validateTestResponses(
       infrequencyScore,
       inconsistencyCount,
       responseVariance: variance,
-      completionTime
+      completionTime,
+      directedFailCount
     }
   };
 }
 
 // ==================== FUNCIONES DE CÁLCULO ====================
 
+const RIASEC_ORDER: RIASECType[] = ['R', 'I', 'A', 'S', 'E', 'C'];
+const MIN_SCORE_PER_CATEGORY = 12; // 12 items × 1 punto
+const MAX_SCORE_PER_CATEGORY = 60; // 12 items × 5 puntos
+
 /**
- * Calcula el percentil basado en puntaje bruto
- * Usa aproximación de distribución normal para simplificar
- * En producción, esto debería usar normas poblacionales reales
+ * Scoring corregido (Fix #1): percentage = (raw - min) / (max - min) * 100
  */
-function calculatePercentile(rawScore: number, maxScore: number): number {
-  // Convertir a porcentaje (0-100)
-  const percentage = (rawScore / maxScore) * 100;
-
-  // Aproximación simple: asumiendo distribución normal
-  // Media = 50%, SD = 15%
-  // En producción, usar tabla de normas real
-  const mean = 50;
-  const sd = 15;
-  const zScore = (percentage - mean) / sd;
-
-  // Convertir z-score a percentil (aproximación)
-  // Fórmula simplificada - en producción usar tabla z completa
-  let percentile: number;
-
-  if (zScore <= -2) percentile = 2;
-  else if (zScore <= -1.5) percentile = 7;
-  else if (zScore <= -1) percentile = 16;
-  else if (zScore <= -0.5) percentile = 31;
-  else if (zScore <= 0) percentile = 50;
-  else if (zScore <= 0.5) percentile = 69;
-  else if (zScore <= 1) percentile = 84;
-  else if (zScore <= 1.5) percentile = 93;
-  else if (zScore <= 2) percentile = 98;
-  else percentile = 99;
-
-  return percentile;
+function calculatePercentage(rawScore: number): number {
+  return Math.round(((rawScore - MIN_SCORE_PER_CATEGORY) / (MAX_SCORE_PER_CATEGORY - MIN_SCORE_PER_CATEGORY)) * 100);
 }
 
 /**
- * Calcula la consistencia del código Holland
- * Basado en el modelo hexagonal RIASEC
+ * Scoring ipsativo (Fix #2): Z-score dentro del perfil del propio estudiante
+ */
+function calculateIpsativePercentile(rawScore: number, allScores: number[]): number {
+  const mean = allScores.reduce((s, v) => s + v, 0) / allScores.length;
+  const sd = Math.sqrt(allScores.reduce((s, v) => s + (v - mean) ** 2, 0) / allScores.length);
+  return Math.max(0, Math.min(100, Math.round(50 + ((rawScore - mean) / (sd || 1)) * 25)));
+}
+
+/**
+ * Consistencia hexagonal
  */
 function calculateConsistency(hollandCode: string): number {
-  // Hexágono RIASEC: R-I-A-S-E-C-R (circular)
-  const hexagon = ['R', 'I', 'A', 'S', 'E', 'C'];
-
+  const hexagon = RIASEC_ORDER;
   const first = hollandCode[0];
   const second = hollandCode[1];
 
-  const idx1 = hexagon.indexOf(first);
-  const idx2 = hexagon.indexOf(second);
+  const idx1 = hexagon.indexOf(first as RIASECType);
+  const idx2 = hexagon.indexOf(second as RIASECType);
 
-  // Calcular distancia en hexágono
   const distance = Math.min(
     Math.abs(idx1 - idx2),
     6 - Math.abs(idx1 - idx2)
   );
 
-  // Consistencia: 3 = adyacentes (alta), 2 = separados por 1, 1 = opuestos (baja)
-  if (distance === 1) return 3; // Alta consistencia
-  if (distance === 2) return 2; // Media consistencia
-  return 1; // Baja consistencia
+  if (distance === 1) return 3;
+  if (distance === 2) return 2;
+  return 1;
 }
 
 /**
- * Calcula la diferenciación (varianza entre puntajes)
+ * Diferenciación basada en SD (Fix #2 mejora)
  */
-function calculateDifferentiation(percentages: number[]): number {
-  const max = Math.max(...percentages);
-  const min = Math.min(...percentages);
-  return max - min;
+function calculateDifferentiation(rawScores: number[]): number {
+  const mean = rawScores.reduce((s, v) => s + v, 0) / rawScores.length;
+  const sd = Math.sqrt(rawScores.reduce((s, v) => s + (v - mean) ** 2, 0) / rawScores.length);
+  // max SD teórica ~20, normalizada a 0-100, clamped
+  return Math.min(100, Math.round((sd / 20) * 100));
 }
 
 /**
- * Genera recomendaciones personalizadas basadas en el perfil
+ * Holland Code con tie-breaking (Fix #10)
+ * Sort por rawScore desc, empates por orden RIASEC (R<I<A<S<E<C)
+ * Genera alternativeHollandCodes si diferencia < 3 puntos
+ */
+function generateHollandCode(scores: RIASECScores): { code: string; alternatives: string[] } {
+  const sorted = RIASEC_ORDER
+    .map(type => ({ type, score: scores[type] }))
+    .sort((a, b) => {
+      if (b.score !== a.score) return b.score - a.score;
+      // Tie-break by RIASEC order
+      return RIASEC_ORDER.indexOf(a.type) - RIASEC_ORDER.indexOf(b.type);
+    });
+
+  const code = sorted.slice(0, 3).map(s => s.type).join('');
+
+  // Generate alternatives: "Regla de 3"
+  const alternatives: string[] = [];
+  const top3 = sorted.slice(0, 3);
+  const fourth = sorted[3];
+
+  // Check if position 2-3 or 3-4 differ by < 3 points
+  if (Math.abs(top3[1].score - top3[2].score) < 3) {
+    // Swap positions 2 and 3
+    const alt = [top3[0].type, top3[2].type, top3[1].type].join('');
+    if (alt !== code) alternatives.push(alt);
+  }
+  if (fourth && Math.abs(top3[2].score - fourth.score) < 3) {
+    // Replace position 3 with position 4
+    const alt = [top3[0].type, top3[1].type, fourth.type].join('');
+    if (alt !== code && !alternatives.includes(alt)) alternatives.push(alt);
+  }
+
+  return { code, alternatives };
+}
+
+/**
+ * Dimensiones Prediger
+ */
+function calculatePredigerDimensions(scores: RIASECScores): { peopleVsThings: number; ideasVsData: number } {
+  // People vs Things: (S+E) - (R+I) normalized to -100..+100
+  const maxDiff = MAX_SCORE_PER_CATEGORY * 2; // theoretical max difference
+  const peopleVsThings = Math.round(((scores.S + scores.E) - (scores.R + scores.I)) / maxDiff * 100);
+
+  // Ideas vs Data: (I+A) - (C+E) normalized to -100..+100
+  const ideasVsData = Math.round(((scores.I + scores.A) - (scores.C + scores.E)) / maxDiff * 100);
+
+  return {
+    peopleVsThings: Math.max(-100, Math.min(100, peopleVsThings)),
+    ideasVsData: Math.max(-100, Math.min(100, ideasVsData))
+  };
+}
+
+/**
+ * Genera recomendaciones personalizadas
  */
 function generateRecommendations(
   percentages: { category: RIASECType; percentage: number; percentile: number }[],
@@ -513,21 +595,16 @@ function generateRecommendations(
 ): string[] {
   const recommendations: string[] = [];
   const topCategory = riasecCategories.find(c => c.id === percentages[0].category)!;
-  const topPercentage = percentages[0].percentage;
   const topPercentile = percentages[0].percentile;
 
-  // Recomendaciones basadas en percentil
-  if (topPercentile >= 85) {
+  // Recomendaciones basadas en percentil ipsativo
+  if (topPercentile >= 75) {
     recommendations.push(
-      `Tu perfil ${topCategory.name} es excepcionalmente fuerte (percentil ${topPercentile}). Tienes un interés muy marcado en esta área.`
-    );
-  } else if (topPercentile >= 70) {
-    recommendations.push(
-      `Tu perfil ${topCategory.name} está bien definido (percentil ${topPercentile}). Muestras un interés significativo en esta área.`
+      `Tu perfil ${topCategory.name} es muy definido (fuerza relativa ${topPercentile}). Tienes un interés muy marcado en esta área.`
     );
   } else if (topPercentile >= 50) {
     recommendations.push(
-      `Tu perfil ${topCategory.name} es moderado (percentil ${topPercentile}). Tienes interés en esta área junto con otros intereses.`
+      `Tu perfil ${topCategory.name} está bien definido (fuerza relativa ${topPercentile}). Muestras un interés significativo en esta área.`
     );
   } else {
     recommendations.push(
@@ -565,11 +642,11 @@ function generateRecommendations(
     );
   }
 
-  // Recomendaciones de desarrollo del tipo principal
+  // Tip de desarrollo
   const tip = topCategory.developmentTips[0];
   recommendations.push(tip);
 
-  // Recomendación sobre tipo secundario si es significativo
+  // Recomendación sobre tipo secundario
   const secondCategory = riasecCategories.find(c => c.id === percentages[1].category)!;
   if (percentages[1].percentile >= 60) {
     recommendations.push(
@@ -581,11 +658,11 @@ function generateRecommendations(
 }
 
 /**
- * Genera matching con carreras UDHI
+ * Genera matching con carreras UDHI usando C-Index (Fix #8)
  */
 function generateCareerMatches(
   scores: RIASECScores,
-  percentages: { category: RIASECType; percentage: number }[]
+  hollandCode: string
 ): {
   name: string;
   description: string;
@@ -595,57 +672,44 @@ function generateCareerMatches(
   duration?: string;
   modalities?: string[];
 }[] {
-  const hollandCode = percentages.slice(0, 3).map(p => p.category).join('');
+  const studentHollandCode = hollandCode.split('');
 
-  // Calcular match para cada carrera de UDHI
   const matches = udhiCareers.map(career => {
-    // Algoritmo de matching mejorado
-    let matchScore = 0;
-
-    // 1. Compatibilidad con tipos primarios de la carrera (60% del peso)
-    career.primaryTypes.forEach((type, index) => {
-      const weight = [0.4, 0.25, 0.15][index] || 0.05; // Pesos decrecientes
-      const studentScore = scores[type as RIASECType] || 0;
-      const maxScore = 50; // 10 preguntas × 5 puntos máximo
-      const normalizedScore = (studentScore / maxScore) * 100;
-      matchScore += normalizedScore * weight;
-    });
-
-    // 2. Bonus por match exacto de código Holland (20% del peso)
-    if (career.riasecProfile === hollandCode) {
-      matchScore += 20;
-    } else if (career.riasecProfile.substring(0, 2) === hollandCode.substring(0, 2)) {
-      matchScore += 10;
-    } else if (career.riasecProfile[0] === hollandCode[0]) {
-      matchScore += 5;
-    }
-
-    // 3. Considerar tipos secundarios (20% del peso)
-    const secondaryMatch = career.primaryTypes.some(type =>
-      percentages.slice(0, 3).some(p => p.category === type)
+    const scoreRecord: { [key: string]: number } = {
+      R: scores.R, I: scores.I, A: scores.A,
+      S: scores.S, E: scores.E, C: scores.C
+    };
+    const matchPercentage = calculateCareerMatch(
+      scoreRecord,
+      career,
+      studentHollandCode
     );
-    if (secondaryMatch) {
-      matchScore += 10;
-    }
 
-    const finalMatch = Math.min(100, Math.round(matchScore));
+    // Generar razón específica según nivel de match
+    const topCompetencies = career.competencies.slice(0, 2).join(' y ').toLowerCase();
+    const studentTop3 = hollandCode.split('');
+    const sharedTypes = career.primaryTypes.filter(t => studentTop3.includes(t));
+    const matchedTypeName: Record<string, string> = {
+      R: 'lo técnico y práctico', I: 'la investigación y el análisis',
+      A: 'la creatividad y el diseño', S: 'el trato con personas',
+      E: 'el liderazgo y la gestión', C: 'la organización y los datos'
+    };
 
-    // Generar razón del match
     let primaryReason: string;
-    if (career.riasecProfile === hollandCode) {
-      primaryReason = `¡Match perfecto! Tu código ${hollandCode} coincide exactamente con esta carrera`;
-    } else if (career.riasecProfile.substring(0, 2) === hollandCode.substring(0, 2)) {
-      const primaryType = riasecCategories.find(c => c.id === career.primaryTypes[0])!;
-      primaryReason = `Excelente compatibilidad - Ambos comparten perfil ${primaryType.name} dominante`;
+    if (matchPercentage >= 80) {
+      primaryReason = `Muy afín a tu perfil. Combina ${topCompetencies}, que conectan directamente con tus intereses.`;
+    } else if (matchPercentage >= 60) {
+      primaryReason = `Buena opción. Tu interés en ${matchedTypeName[sharedTypes[0]] || 'este campo'} se alinea con ${topCompetencies}.`;
+    } else if (matchPercentage >= 40) {
+      primaryReason = `Opción parcial. Conecta con tu lado ${matchedTypeName[sharedTypes[0]] || 'exploratorio'}, aunque no es tu área principal.`;
     } else {
-      const primaryType = riasecCategories.find(c => c.id === career.primaryTypes[0])!;
-      primaryReason = `Compatible con tu interés en el área ${primaryType.name}`;
+      primaryReason = `Poco afín a tu perfil actual. Esta carrera se enfoca en ${topCompetencies}, que no están entre tus intereses más fuertes.`;
     }
 
     return {
       name: career.name,
       description: career.description,
-      matchPercentage: finalMatch,
+      matchPercentage,
       primaryReason,
       area: career.area,
       duration: career.duration,
@@ -653,7 +717,6 @@ function generateCareerMatches(
     };
   });
 
-  // Ordenar por match percentage descendente
   return matches.sort((a, b) => b.matchPercentage - a.matchPercentage);
 }
 
@@ -667,10 +730,9 @@ export function calculateProfessionalResults(
   // 1. Validar respuestas
   const validation = validateTestResponses(answers, timeData);
 
-  // 2. Calcular puntajes brutos por dimensión RIASEC
+  // 2. Calcular puntajes brutos por dimensión RIASEC (solo regulares)
   const scores: RIASECScores = { R: 0, I: 0, A: 0, S: 0, E: 0, C: 0 };
 
-  // Solo contar preguntas regulares (no control)
   const regularQuestions = professionalQuestions.filter(q => !q.isControl);
 
   regularQuestions.forEach(question => {
@@ -680,42 +742,48 @@ export function calculateProfessionalResults(
     }
   });
 
-  // 3. Calcular porcentajes y percentiles
-  const maxScorePerCategory = 50; // 10 preguntas × 5 puntos = 50
+  // 3. Calcular porcentajes y percentiles ipsativos
+  const rawValues = RIASEC_ORDER.map(type => scores[type]);
 
-  const percentages = (Object.keys(scores) as RIASECType[])
+  const percentages = RIASEC_ORDER
     .map(category => ({
       category,
       rawScore: scores[category],
-      percentage: Math.round((scores[category] / maxScorePerCategory) * 100),
-      percentile: calculatePercentile(scores[category], maxScorePerCategory)
+      percentage: calculatePercentage(scores[category]),
+      percentile: calculateIpsativePercentile(scores[category], rawValues)
     }))
-    .sort((a, b) => b.percentage - a.percentage);
+    .sort((a, b) => {
+      if (b.rawScore !== a.rawScore) return b.rawScore - a.rawScore;
+      return RIASEC_ORDER.indexOf(a.category) - RIASEC_ORDER.indexOf(b.category);
+    });
 
-  // 4. Generar código Holland (top 3 tipos)
-  const hollandCode = percentages.slice(0, 3).map(p => p.category).join('');
+  // 4. Holland Code con tie-breaking
+  const { code: hollandCode, alternatives: alternativeHollandCodes } = generateHollandCode(scores);
 
-  // 5. Calcular métricas de perfil
+  // 5. Métricas de perfil
   const consistency = calculateConsistency(hollandCode);
-  const differentiation = calculateDifferentiation(percentages.map(p => p.percentage));
+  const differentiation = calculateDifferentiation(rawValues);
+  const predigerDimensions = calculatePredigerDimensions(scores);
 
-  // 6. Obtener categorías principales
+  // 6. Categorías principales
   const primaryType = riasecCategories.find(c => c.id === percentages[0].category)!;
   const secondaryType = riasecCategories.find(c => c.id === percentages[1].category)!;
   const tertiaryType = riasecCategories.find(c => c.id === percentages[2].category)!;
 
-  // 7. Generar recomendaciones personalizadas
+  // 7. Recomendaciones
   const recommendations = generateRecommendations(percentages, consistency, differentiation);
 
-  // 8. Generar matches con carreras UDHI
-  const topCareers = generateCareerMatches(scores, percentages);
+  // 8. Matches con carreras UDHI (C-Index)
+  const topCareers = generateCareerMatches(scores, hollandCode);
 
   return {
     scores,
     percentages,
     hollandCode,
+    alternativeHollandCodes: alternativeHollandCodes.length > 0 ? alternativeHollandCodes : undefined,
     consistency,
     differentiation,
+    predigerDimensions,
     primaryType,
     secondaryType,
     tertiaryType,
@@ -724,4 +792,3 @@ export function calculateProfessionalResults(
     validation
   };
 }
-

@@ -23,141 +23,113 @@ export default function Instructions() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
+    <div className="min-h-screen bg-white flex flex-col">
       {/* Header */}
-      <div className="bg-white border-b-2 border-gray-200 shadow-md">
-        <div className="max-w-6xl mx-auto px-6 lg:px-8 py-5">
+      <div className="border-b border-gray-200">
+        <div className="px-6 lg:px-12 py-4 flex items-center">
           <Image
-            src="/logo-udhi.svg"
-            alt="UDHI - Universidad para el Desarrollo Humano e Integral"
-            width={280}
-            height={49}
-            className="h-auto w-full max-w-[280px]"
+            src="/logo-udhi.webp"
+            alt="UDHI - Universidad de Dolores Hidalgo"
+            width={110}
+            height={19}
+            className="h-auto w-full max-w-[110px] logo-blue"
             priority
           />
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-16">
-        <div className="bg-white rounded-2xl shadow-xl border-2 border-gray-200 p-4 sm:p-8 lg:p-12 animate-fade-in">
-          {/* Greeting */}
-          <div className="mb-6 sm:mb-8">
-            <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold bg-gradient-to-r from-[#0D47A1] to-[#1565C0] bg-clip-text text-transparent mb-3 sm:mb-4">
-              ¡Hola, {userName}!
-            </h1>
-            <p className="text-lg sm:text-xl text-gray-700">
-              Estás por comenzar el Test Vocacional UDHI
-            </p>
+      {/* Hero */}
+      <div className="bg-gradient-to-b from-[#0D47A1] to-[#1565C0] text-white px-6 lg:px-12 py-12 lg:py-20">
+        <div className="max-w-5xl">
+          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-3">
+            ¡Hola, {userName}!
+          </h1>
+          <p className="text-lg sm:text-xl text-blue-100">
+            Estás por comenzar el Test Vocacional UDHI
+          </p>
+        </div>
+      </div>
+
+      {/* Instructions - full width grid */}
+      <div className="flex-1 px-6 lg:px-12 py-8 lg:py-12">
+        <div className="grid md:grid-cols-2 gap-6 lg:gap-8 mb-10">
+          {/* Card 1 */}
+          <div className="flex gap-4 p-6 rounded-xl border border-gray-200 hover:border-[#1565C0] transition-colors">
+            <div className="flex-shrink-0">
+              <div className="w-10 h-10 bg-[#1565C0] rounded-lg flex items-center justify-center text-white font-bold text-lg">
+                1
+              </div>
+            </div>
+            <div>
+              <h3 className="font-bold text-gray-900 text-lg mb-1">Responde con honestidad</h3>
+              <p className="text-gray-600">
+                No hay respuestas correctas o incorrectas. Lo importante es que refleje tus verdaderos intereses y preferencias.
+              </p>
+            </div>
           </div>
 
-          {/* Instructions */}
-          <div className="space-y-4 sm:space-y-6 mb-8 sm:mb-10">
-            <div className="flex gap-3 sm:gap-4 p-4 sm:p-6 bg-gradient-to-br from-blue-50 to-white rounded-xl border-2 border-blue-200">
-              <div className="flex-shrink-0">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#1565C0] to-[#1E88E5] rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-lg">
-                  1
-                </div>
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-900 text-base sm:text-lg mb-2">Responde con honestidad</h3>
-                <p className="text-sm sm:text-base text-gray-700">
-                  No hay respuestas correctas o incorrectas. Lo importante es que refleje tus verdaderos intereses y preferencias.
-                </p>
+          {/* Card 2 */}
+          <div className="flex gap-4 p-6 rounded-xl border border-gray-200 hover:border-[#1565C0] transition-colors">
+            <div className="flex-shrink-0">
+              <div className="w-10 h-10 bg-[#1565C0] rounded-lg flex items-center justify-center text-white font-bold text-lg">
+                2
               </div>
             </div>
+            <div>
+              <h3 className="font-bold text-gray-900 text-lg mb-1">80 preguntas</h3>
+              <p className="text-gray-600 mb-2">
+                Sobre actividades, competencias y ocupaciones. Piensa: <span className="italic">&quot;¿Qué tan interesante me parece esto?&quot;</span>
+              </p>
+            </div>
+          </div>
 
-            <div className="flex gap-3 sm:gap-4 p-4 sm:p-6 bg-gradient-to-br from-blue-50 to-white rounded-xl border-2 border-blue-200">
-              <div className="flex-shrink-0">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#1565C0] to-[#1E88E5] rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-lg">
-                  2
-                </div>
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-900 text-base sm:text-lg mb-2">Son 60 preguntas con frases de actividades</h3>
-                <p className="text-sm sm:text-base text-gray-700 mb-3">
-                  Verás frases como <span className="font-semibold">"Reparar equipos electrónicos"</span> o <span className="font-semibold">"Enseñar conceptos complejos"</span>.
-                </p>
-                <p className="text-sm sm:text-base text-gray-700">
-                  Piensa: <span className="italic">"¿Qué tanto me gustaría realizar esta actividad?"</span>
-                </p>
+          {/* Card 3 - Escala */}
+          <div className="flex gap-4 p-6 rounded-xl border border-gray-200 hover:border-[#1565C0] transition-colors">
+            <div className="flex-shrink-0">
+              <div className="w-10 h-10 bg-[#1565C0] rounded-lg flex items-center justify-center text-white font-bold text-lg">
+                3
               </div>
             </div>
-
-            <div className="flex gap-3 sm:gap-4 p-4 sm:p-6 bg-gradient-to-br from-blue-50 to-white rounded-xl border-2 border-blue-200">
-              <div className="flex-shrink-0">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#1565C0] to-[#1E88E5] rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-lg">
-                  3
-                </div>
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-900 text-base sm:text-lg mb-2">Usa la escala del 1 al 5</h3>
-                <div className="space-y-2 mt-3">
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <span className="font-bold text-[#1565C0] text-base sm:text-lg w-5 sm:w-6">1</span>
-                    <span className="text-xs sm:text-sm text-gray-700">= Totalmente en desacuerdo / No me gusta nada</span>
-                  </div>
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <span className="font-bold text-[#1565C0] text-base sm:text-lg w-5 sm:w-6">2</span>
-                    <span className="text-xs sm:text-sm text-gray-700">= En desacuerdo / No me gusta mucho</span>
-                  </div>
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <span className="font-bold text-[#1565C0] text-base sm:text-lg w-5 sm:w-6">3</span>
-                    <span className="text-xs sm:text-sm text-gray-700">= Neutral / Me es indiferente</span>
-                  </div>
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <span className="font-bold text-[#1565C0] text-base sm:text-lg w-5 sm:w-6">4</span>
-                    <span className="text-xs sm:text-sm text-gray-700">= De acuerdo / Me gusta</span>
-                  </div>
-                  <div className="flex items-center gap-2 sm:gap-3">
-                    <span className="font-bold text-[#1565C0] text-base sm:text-lg w-5 sm:w-6">5</span>
-                    <span className="text-xs sm:text-sm text-gray-700">= Totalmente de acuerdo / Me gusta mucho</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            <div className="flex gap-3 sm:gap-4 p-4 sm:p-6 bg-gradient-to-br from-blue-50 to-white rounded-xl border-2 border-blue-200">
-              <div className="flex-shrink-0">
-                <div className="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-[#1565C0] to-[#1E88E5] rounded-full flex items-center justify-center text-white font-bold text-lg sm:text-xl shadow-lg">
-                  4
-                </div>
-              </div>
-              <div>
-                <h3 className="font-bold text-gray-900 text-base sm:text-lg mb-2">Tómate tu tiempo</h3>
-                <p className="text-sm sm:text-base text-gray-700">
-                  El test toma aproximadamente <span className="font-semibold">10-15 minutos</span>. No hay límite de tiempo, pero responde con tu primera impresión.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-3 sm:gap-4 p-4 sm:p-6 bg-gradient-to-br from-amber-50 to-white rounded-xl border-2 border-amber-300">
-              <div className="flex-shrink-0">
-                <svg className="w-10 h-10 sm:w-12 sm:h-12 text-amber-600" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                </svg>
-              </div>
-              <div>
-                <h3 className="font-bold text-amber-900 text-base sm:text-lg mb-2">Importante</h3>
-                <p className="text-sm sm:text-base text-amber-800">
-                  El test incluye preguntas de validación para asegurar la calidad de tus resultados. Responde todas las preguntas con atención.
-                </p>
+            <div>
+              <h3 className="font-bold text-gray-900 text-lg mb-3">Escala del 1 al 5</h3>
+              <div className="flex flex-wrap gap-3">
+                <span className="px-3 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-700"><strong className="text-[#1565C0]">1</strong> Nada</span>
+                <span className="px-3 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-700"><strong className="text-[#1565C0]">2</strong> Poco</span>
+                <span className="px-3 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-700"><strong className="text-[#1565C0]">3</strong> Algo</span>
+                <span className="px-3 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-700"><strong className="text-[#1565C0]">4</strong> Interesante</span>
+                <span className="px-3 py-1 bg-gray-100 rounded-full text-sm font-medium text-gray-700"><strong className="text-[#1565C0]">5</strong> Mucho</span>
               </div>
             </div>
           </div>
 
-          {/* Start Button */}
-          <div className="text-center">
-            <button
-              onClick={handleStart}
-              className="inline-flex items-center justify-center gap-2 sm:gap-3 w-full sm:w-auto px-8 sm:px-10 py-3 sm:py-4 bg-gradient-to-r from-[#1565C0] to-[#1E88E5] hover:from-[#0D47A1] hover:to-[#1565C0] text-white font-bold text-base sm:text-lg rounded-xl transition-all duration-300 shadow-lg hover:shadow-xl hover:scale-105"
-            >
-              Comenzar Test
-              <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
-              </svg>
-            </button>
+          {/* Card 4 */}
+          <div className="flex gap-4 p-6 rounded-xl border border-gray-200 hover:border-[#1565C0] transition-colors">
+            <div className="flex-shrink-0">
+              <div className="w-10 h-10 bg-[#1565C0] rounded-lg flex items-center justify-center text-white font-bold text-lg">
+                4
+              </div>
+            </div>
+            <div>
+              <h3 className="font-bold text-gray-900 text-lg mb-1">18-25 minutos</h3>
+              <p className="text-gray-600">
+                No hay límite de tiempo. Responde con tu primera impresión, sin pensarlo demasiado.
+              </p>
+            </div>
           </div>
+        </div>
+
+        {/* CTA */}
+        <div className="text-center pt-4">
+          <button
+            onClick={handleStart}
+            className="inline-flex items-center gap-2 px-10 py-4 bg-[#1565C0] hover:bg-[#0D47A1] text-white font-bold text-lg rounded-xl transition-colors shadow-lg hover:shadow-xl"
+          >
+            Comenzar Test
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />
+            </svg>
+          </button>
+          <p className="text-xs text-gray-400 mt-4">Responde todas las preguntas con atención para obtener resultados precisos</p>
         </div>
       </div>
     </div>

@@ -71,18 +71,18 @@ export default function Register() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50 flex">
+    <div className="min-h-screen bg-white flex">
       {/* Left Panel - Form */}
       <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 lg:p-16 animate-fade-in">
         <div className="w-full max-w-md">
           {/* Logo */}
           <div className="mb-8 sm:mb-12">
             <Image
-              src="/logo-udhi.svg"
-              alt="UDHI - Universidad para el Desarrollo Humano e Integral"
-              width={360}
-              height={63}
-              className="h-auto w-full max-w-[280px] sm:max-w-[360px] drop-shadow-md"
+              src="/logo-udhi.webp"
+              alt="UDHI - Universidad de Dolores Hidalgo"
+              width={130}
+              height={23}
+              className="h-auto w-full max-w-[120px] sm:max-w-[130px] drop-shadow-md logo-blue"
               priority
             />
           </div>
@@ -246,7 +246,7 @@ export default function Register() {
                 </div>
               </div>
               <div>
-                <h3 className="font-bold text-gray-900 mb-1">60 preguntas validadas científicamente</h3>
+                <h3 className="font-bold text-gray-900 mb-1">80 preguntas validadas científicamente</h3>
                 <p className="text-gray-700">Evaluación profesional con validación de consistencia</p>
               </div>
             </div>
@@ -274,7 +274,7 @@ export default function Register() {
                 </div>
               </div>
               <div>
-                <h3 className="font-bold text-gray-900 mb-1">10-15 minutos</h3>
+                <h3 className="font-bold text-gray-900 mb-1">18-25 minutos</h3>
                 <p className="text-gray-700">Tiempo óptimo - Responde con honestidad y atención</p>
               </div>
             </div>

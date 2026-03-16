@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import {
   professionalQuestions,
+  questionOrder,
   likertOptions,
   calculateProfessionalResults,
   LikertScale,
@@ -27,10 +28,10 @@ export default function Test() {
     }
     const user = JSON.parse(userInfo);
     setUserName(`${user.nombre} ${user.apellido}`);
-
-    // Iniciar tracking de tiempo
     setStartTime(Date.now());
   }, [router]);
+
+  const orderedQuestions = questionOrder.map(id => professionalQuestions.find(q => q.id === id)!);
 
   const handleAnswer = (value: LikertScale) => {
     setSelectedOption(value);
@@ -40,21 +41,17 @@ export default function Test() {
     if (selectedOption !== null) {
       const newAnswers = {
         ...answers,
-        [professionalQuestions[currentQuestion].id]: selectedOption
+        [orderedQuestions[currentQuestion].id]: selectedOption
       };
       setAnswers(newAnswers);
 
-      if (currentQuestion < professionalQuestions.length - 1) {
+      if (currentQuestion < orderedQuestions.length - 1) {
         setCurrentQuestion(currentQuestion + 1);
-        const nextQuestionId = professionalQuestions[currentQuestion + 1].id;
+        const nextQuestionId = orderedQuestions[currentQuestion + 1].id;
         setSelectedOption(newAnswers[nextQuestionId] || null);
       } else {
-        // Calcular resultados con tiempo de completación
         const endTime = Date.now();
-        const results = calculateProfessionalResults(newAnswers, {
-          startTime,
-          endTime
-        });
+        const results = calculateProfessionalResults(newAnswers, { startTime, endTime });
         localStorage.setItem('professionalVocationalResults', JSON.stringify(results));
         router.push('/results');
       }
@@ -64,155 +61,112 @@ export default function Test() {
   const handlePrevious = () => {
     if (currentQuestion > 0) {
       setCurrentQuestion(currentQuestion - 1);
-      const prevQuestionId = professionalQuestions[currentQuestion - 1].id;
+      const prevQuestionId = orderedQuestions[currentQuestion - 1].id;
       setSelectedOption(answers[prevQuestionId] || null);
     }
   };
 
-  const progress = ((currentQuestion + 1) / professionalQuestions.length) * 100;
-  const question = professionalQuestions[currentQuestion];
+  const progress = ((currentQuestion + 1) / orderedQuestions.length) * 100;
+  const question = orderedQuestions[currentQuestion];
 
-  // Filtrar preguntas de control para no mostrarlas en el conteo visible
-  const regularQuestions = professionalQuestions.filter(q => !q.isControl);
-  const currentRegularIndex = regularQuestions.findIndex(q => q.id === question.id);
-  const displayQuestionNumber = currentRegularIndex >= 0 ? currentRegularIndex + 1 : currentQuestion + 1;
-  const totalRegularQuestions = regularQuestions.length;
+  const displayQuestionNumber = currentQuestion + 1;
+  const totalQuestions = orderedQuestions.length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-blue-50">
+    <div className="min-h-screen bg-white flex flex-col">
       {/* Header */}
-      <div className="bg-white border-b-2 border-gray-200 shadow-md">
-        <div className="max-w-6xl mx-auto px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            <Image
-              src="/logo-udhi.svg"
-              alt="UDHI - Universidad para el Desarrollo Humano e Integral"
-              width={240}
-              height={42}
-              className="h-auto w-full max-w-[240px]"
-            />
-            <div className="flex items-center gap-6">
-              <div className="text-right hidden sm:block">
-                <div className="text-xs text-gray-500">Participante</div>
-                <div className="text-sm font-medium text-gray-900">{userName}</div>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-gray-600">{displayQuestionNumber}/{totalRegularQuestions}</span>
-              </div>
+      <div className="border-b border-gray-200">
+        <div className="px-6 lg:px-12 py-3 flex items-center justify-between">
+          <Image
+            src="/logo-udhi.webp"
+            alt="UDHI - Universidad de Dolores Hidalgo"
+            width={100}
+            height={18}
+            className="h-auto w-full max-w-[100px] logo-blue"
+          />
+          <div className="flex items-center gap-6">
+            <div className="text-right hidden sm:block">
+              <div className="text-xs text-gray-400">Participante</div>
+              <div className="text-sm font-medium text-gray-900">{userName}</div>
+            </div>
+            <div className="text-sm font-bold text-[#1565C0]">
+              {displayQuestionNumber}/{totalQuestions}
             </div>
           </div>
         </div>
-      </div>
-
-      {/* Progress Bar */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-6xl mx-auto px-6 lg:px-8 py-3">
-          <div className="relative w-full h-2 bg-gray-200 rounded-full overflow-hidden">
-            <div
-              className="absolute top-0 left-0 h-full bg-gradient-to-r from-[#1565C0] to-[#1E88E5] transition-all duration-500 shadow-sm"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+        {/* Progress Bar - full width flush */}
+        <div className="w-full h-1 bg-gray-100">
+          <div
+            className="h-full bg-[#1565C0] transition-all duration-500"
+            style={{ width: `${progress}%` }}
+          />
         </div>
       </div>
 
-      {/* Question Content */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-10 animate-fade-in">
-        <div className="bg-white rounded-2xl shadow-lg border-2 border-gray-200 p-4 sm:p-6 lg:p-12 hover:shadow-xl transition-shadow duration-300">
+      {/* Question Content - centered vertically and horizontally */}
+      <div className="flex-1 flex flex-col items-center justify-center px-6 lg:px-12 py-8">
+        <div className="w-full max-w-2xl text-center">
           {/* Control Question Badge */}
           {question.isControl && (
-            <div className="mb-6">
-              <span className="inline-flex items-center gap-1.5 px-4 py-2 bg-gradient-to-r from-[#1565C0] to-[#1E88E5] text-white rounded-full text-xs font-semibold uppercase tracking-wide shadow-md">
+            <div className="mb-4">
+              <span className="inline-flex items-center px-3 py-1 bg-[#1565C0] text-white rounded-full text-xs font-semibold uppercase tracking-wide">
                 Pregunta de Validación
               </span>
             </div>
           )}
 
           {/* Question */}
-          <h2 className="text-lg sm:text-xl lg:text-2xl font-semibold text-gray-900 mb-6 sm:mb-10 leading-relaxed">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-semibold text-gray-900 mb-8 lg:mb-10 leading-relaxed">
             {question.text}
           </h2>
 
-          {/* Likert Scale - Professional Format */}
-          <div className="space-y-3 mb-12">
-            {/* Header */}
-            <div className="grid grid-cols-5 gap-2 mb-2 px-4">
-              {likertOptions.map((option) => (
-                <div key={option.value} className="text-center">
-                  <div className="text-xs font-medium text-gray-600 mb-1">{option.value}</div>
-                  <div className="text-xs text-gray-500">{option.shortLabel}</div>
+          {/* Likert Scale */}
+          <div className="grid grid-cols-5 gap-3 sm:gap-4 mb-8 lg:mb-10">
+            {likertOptions.map((option) => (
+              <button
+                key={option.value}
+                onClick={() => handleAnswer(option.value)}
+                className={`relative flex flex-col items-center justify-center py-5 sm:py-7 rounded-xl border-2 transition-all duration-200 cursor-pointer ${
+                  selectedOption === option.value
+                    ? 'border-[#1565C0] bg-[#1565C0] shadow-lg scale-[1.03]'
+                    : 'border-gray-200 bg-white hover:border-[#1565C0] hover:bg-blue-50'
+                }`}
+              >
+                <div className={`text-2xl sm:text-3xl font-bold mb-1 ${
+                  selectedOption === option.value ? 'text-white' : 'text-gray-900'
+                }`}>
+                  {option.value}
                 </div>
-              ))}
-            </div>
-
-            {/* Options as buttons */}
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-xl p-3 sm:p-6 border-2 border-gray-200">
-              <div className="grid grid-cols-5 gap-2 sm:gap-3">
-                {likertOptions.map((option) => (
-                  <button
-                    key={option.value}
-                    onClick={() => handleAnswer(option.value)}
-                    className={`relative group flex flex-col items-center justify-center p-3 sm:p-6 rounded-lg sm:rounded-xl border-2 transition-all duration-300 ${
-                      selectedOption === option.value
-                        ? 'border-[#1565C0] bg-gradient-to-br from-[#1565C0] to-[#1E88E5] shadow-xl scale-105 transform'
-                        : 'border-gray-300 bg-white hover:border-[#1565C0] hover:bg-blue-50 hover:scale-102'
-                    }`}
-                  >
-                    <div className={`text-2xl sm:text-3xl font-bold mb-1 sm:mb-2 ${
-                      selectedOption === option.value ? 'text-white' : 'text-gray-900'
-                    }`}>
-                      {option.value}
-                    </div>
-                    <div className={`text-[10px] sm:text-xs font-medium text-center ${
-                      selectedOption === option.value ? 'text-white' : 'text-gray-600'
-                    }`}>
-                      {option.shortLabel}
-                    </div>
-
-                    {selectedOption === option.value && (
-                      <div className="absolute -top-2 -right-2 animate-scale-in">
-                        <div className="w-7 h-7 bg-white rounded-full flex items-center justify-center shadow-lg">
-                          <svg className="w-5 h-5 text-[#1565C0]" fill="currentColor" viewBox="0 0 20 20">
-                            <path
-                              fillRule="evenodd"
-                              d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                              clipRule="evenodd"
-                            />
-                          </svg>
-                        </div>
-                      </div>
-                    )}
-                  </button>
-                ))}
-              </div>
-
-              {/* Labels below */}
-              <div className="grid grid-cols-5 gap-3 mt-4">
-                {likertOptions.map((option) => (
-                  <div key={option.value} className="text-center">
-                    <div className={`text-xs leading-tight transition-colors ${
-                      selectedOption === option.value ? 'text-[#1565C0] font-bold' : 'text-gray-600'
-                    }`}>
-                      {option.label}
+                <div className={`text-[11px] sm:text-sm font-medium ${
+                  selectedOption === option.value ? 'text-blue-100' : 'text-gray-500'
+                }`}>
+                  {option.label}
+                </div>
+                {selectedOption === option.value && (
+                  <div className="absolute -top-2 -right-2">
+                    <div className="w-6 h-6 bg-white rounded-full flex items-center justify-center shadow">
+                      <svg className="w-4 h-4 text-[#1565C0]" fill="currentColor" viewBox="0 0 20 20">
+                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                      </svg>
                     </div>
                   </div>
-                ))}
-              </div>
-            </div>
+                )}
+              </button>
+            ))}
           </div>
 
           {/* Navigation */}
-          <div className="flex items-center justify-between pt-6 border-t-2 border-gray-200">
+          <div className="flex items-center justify-center gap-4">
             <button
               onClick={handlePrevious}
               disabled={currentQuestion === 0}
-              className={`inline-flex items-center gap-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
+              className={`inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-semibold text-base transition-colors min-w-[160px] ${
                 currentQuestion === 0
-                  ? 'text-gray-400 cursor-not-allowed'
-                  : 'text-gray-700 hover:bg-gray-100 border-2 border-gray-300 hover:border-gray-400 hover:shadow-md'
+                  ? 'text-gray-300 border-2 border-gray-100 cursor-not-allowed'
+                  : 'text-gray-700 border-2 border-gray-300 hover:bg-gray-50 hover:border-gray-400'
               }`}
             >
-              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
               </svg>
               Anterior
@@ -221,36 +175,29 @@ export default function Test() {
             <button
               onClick={handleNext}
               disabled={selectedOption === null}
-              className={`inline-flex items-center gap-2 px-8 py-3 rounded-xl font-bold transition-all duration-300 ${
+              className={`inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-xl font-bold text-base transition-colors min-w-[160px] ${
                 selectedOption === null
-                  ? 'bg-gray-300 text-gray-500 cursor-not-allowed'
-                  : 'bg-gradient-to-r from-[#1565C0] to-[#1E88E5] text-white hover:from-[#0D47A1] hover:to-[#1565C0] shadow-lg hover:shadow-xl hover:scale-105'
+                  ? 'bg-gray-200 text-gray-400 cursor-not-allowed'
+                  : 'bg-[#1565C0] text-white hover:bg-[#0D47A1] shadow-lg'
               }`}
             >
-              {currentQuestion === professionalQuestions.length - 1 ? (
+              {currentQuestion === orderedQuestions.length - 1 ? (
                 <>
                   Finalizar Test
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
                   </svg>
                 </>
               ) : (
                 <>
                   Siguiente
-                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
                   </svg>
                 </>
               )}
             </button>
           </div>
-        </div>
-
-        {/* Help Text */}
-        <div className="text-center mt-8">
-          <p className="text-sm text-gray-600 font-medium">
-            Selecciona el número que mejor represente tu nivel de acuerdo con la afirmación
-          </p>
         </div>
       </div>
     </div>

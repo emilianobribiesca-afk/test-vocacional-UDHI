@@ -1,5 +1,5 @@
 // Carreras específicas de UDHI mapeadas a perfiles RIASEC
-// Universidad Digital del Estado de Hidalgo
+// Universidad de Dolores Hidalgo
 
 export interface UDHICareer {
   id: string;
@@ -40,8 +40,8 @@ export const udhiCareers: UDHICareer[] = [
     id: 'estilismo-cosmetologia',
     name: 'Licenciatura en Estilismo y Cosmetología',
     area: 'Salud',
-    riasecProfile: 'AES',
-    primaryTypes: ['A', 'E', 'S'],
+    riasecProfile: 'ARS',
+    primaryTypes: ['A', 'R', 'S'],
     description: 'Desarrolla profesionales especializados en tratamientos estéticos, imagen personal y bienestar, combinando conocimientos técnicos con creatividad artística.',
     competencies: [
       'Técnicas de estilismo y belleza',
@@ -78,8 +78,8 @@ export const udhiCareers: UDHICareer[] = [
     id: 'nutricion',
     name: 'Licenciatura en Nutrición',
     area: 'Salud',
-    riasecProfile: 'ISE',
-    primaryTypes: ['I', 'S', 'E'],
+    riasecProfile: 'ISR',
+    primaryTypes: ['I', 'S', 'R'],
     description: 'Forma expertos en alimentación y nutrición que promueven la salud a través de planes alimenticios personalizados y educación nutricional.',
     competencies: [
       'Evaluación del estado nutricional',
@@ -118,8 +118,8 @@ export const udhiCareers: UDHICareer[] = [
     id: 'criminologia-criminalistica',
     name: 'Licenciatura en Criminología y Criminalística',
     area: 'Humanidades',
-    riasecProfile: 'ICS',
-    primaryTypes: ['I', 'C', 'S'],
+    riasecProfile: 'IRC',
+    primaryTypes: ['I', 'R', 'C'],
     description: 'Forma especialistas en el estudio del crimen, sus causas y la investigación científica de evidencias para el sistema de justicia.',
     competencies: [
       'Investigación criminológica',
@@ -175,8 +175,8 @@ export const udhiCareers: UDHICareer[] = [
     id: 'idiomas',
     name: 'Licenciatura en Idiomas',
     area: 'Humanidades',
-    riasecProfile: 'SAE',
-    primaryTypes: ['S', 'A', 'E'],
+    riasecProfile: 'SAI',
+    primaryTypes: ['S', 'A', 'I'],
     description: 'Desarrolla profesionales multilingües capacitados en la enseñanza, traducción e interpretación de lenguas extranjeras.',
     competencies: [
       'Dominio de múltiples idiomas',
@@ -213,8 +213,8 @@ export const udhiCareers: UDHICareer[] = [
     id: 'diseno-interiores',
     name: 'Licenciatura en Diseño de Interiores',
     area: 'Humanidades',
-    riasecProfile: 'AER',
-    primaryTypes: ['A', 'E', 'R'],
+    riasecProfile: 'ARI',
+    primaryTypes: ['A', 'R', 'I'],
     description: 'Capacita diseñadores especializados en crear espacios interiores funcionales, estéticos y que mejoren la calidad de vida.',
     competencies: [
       'Diseño de espacios interiores',
@@ -253,8 +253,8 @@ export const udhiCareers: UDHICareer[] = [
     id: 'administracion-empresas',
     name: 'Licenciatura en Administración de Empresas',
     area: 'Negocios',
-    riasecProfile: 'ECR',
-    primaryTypes: ['E', 'C', 'R'],
+    riasecProfile: 'ECS',
+    primaryTypes: ['E', 'C', 'S'],
     description: 'Prepara líderes empresariales con capacidad para administrar recursos, tomar decisiones estratégicas y gestionar organizaciones.',
     competencies: [
       'Planeación estratégica',
@@ -341,19 +341,73 @@ export function getCareersByRIASEC(riasecTypes: string[]): UDHICareer[] {
   );
 }
 
-// Función para calcular compatibilidad entre perfil del estudiante y carrera
-export function calculateCareerMatch(
-  studentProfile: { [key: string]: number },
-  career: UDHICareer
-): number {
-  const careerTypes = career.primaryTypes;
-  let totalScore = 0;
-  let weights = [0.5, 0.3, 0.2]; // Pesos para 1er, 2do y 3er tipo
+// Hexagonal distance between two RIASEC types
+function hexagonalDistance(a: string, b: string): number {
+  const hexagon = ['R', 'I', 'A', 'S', 'E', 'C'];
+  const idx1 = hexagon.indexOf(a);
+  const idx2 = hexagon.indexOf(b);
+  if (idx1 === -1 || idx2 === -1) return 0;
+  const dist = Math.min(Math.abs(idx1 - idx2), 6 - Math.abs(idx1 - idx2));
+  // same=3, adjacent=2, alternate=1, opposite=0
+  return Math.max(0, 3 - dist);
+}
 
-  careerTypes.forEach((type, index) => {
-    const weight = weights[index] || 0.1;
-    totalScore += (studentProfile[type] || 0) * weight;
+// C-Index de Brown & Gore: C = 3(X₁) + 2(X₂) + 1(X₃)
+function calculateCIndex(studentCode: string[], careerCode: string[]): number {
+  let cIndex = 0;
+  const weights = [3, 2, 1];
+  for (let i = 0; i < Math.min(3, studentCode.length); i++) {
+    cIndex += weights[i] * hexagonalDistance(studentCode[i], careerCode[i] || '');
+  }
+  return cIndex; // Range: 0-18
+}
+
+// Cosine similarity between two 6-dimension RIASEC vectors
+function cosineSimilarity(a: number[], b: number[]): number {
+  let dot = 0, magA = 0, magB = 0;
+  for (let i = 0; i < 6; i++) {
+    dot += a[i] * b[i];
+    magA += a[i] * a[i];
+    magB += b[i] * b[i];
+  }
+  if (magA === 0 || magB === 0) return 0;
+  return dot / (Math.sqrt(magA) * Math.sqrt(magB));
+}
+
+// Build RIASEC vector from primaryTypes: 1st=5, 2nd=3, 3rd=1, rest=0
+function careerToVector(career: UDHICareer): number[] {
+  const types = ['R', 'I', 'A', 'S', 'E', 'C'];
+  const weights = [5, 3, 1];
+  return types.map(t => {
+    const idx = career.primaryTypes.indexOf(t);
+    return idx >= 0 && idx < 3 ? weights[idx] : 0;
   });
+}
 
-  return Math.round(totalScore);
+// Función para calcular compatibilidad entre perfil del estudiante y carrera
+// Uses 70% C-Index + 30% Cosine similarity
+export function calculateCareerMatch(
+  studentScores: { [key: string]: number },
+  career: UDHICareer,
+  studentHollandCode?: string[]
+): number {
+  const types: string[] = ['R', 'I', 'A', 'S', 'E', 'C'];
+
+  // Derive student Holland code from scores if not provided
+  const code = studentHollandCode || types
+    .map(t => ({ type: t, score: studentScores[t] || 0 }))
+    .sort((a, b) => b.score - a.score)
+    .map(x => x.type);
+
+  // C-Index (normalized to 0-100)
+  const cIndex = calculateCIndex(code.slice(0, 3), career.primaryTypes);
+  const cIndexNorm = (cIndex / 18) * 100;
+
+  // Cosine similarity of full 6D vectors (normalized to 0-100)
+  const studentVector = types.map(t => studentScores[t] || 0);
+  const careerVector = careerToVector(career);
+  const cosine = cosineSimilarity(studentVector, careerVector) * 100;
+
+  // Weighted: 70% C-Index + 30% Cosine
+  return Math.min(100, Math.round(cIndexNorm * 0.7 + cosine * 0.3));
 }

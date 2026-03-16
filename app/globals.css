@@ -24,3 +24,7 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+.logo-blue {
+  filter: brightness(0) saturate(100%) invert(24%) sepia(95%) saturate(1800%) hue-rotate(203deg) brightness(92%) contrast(92%);
+}
