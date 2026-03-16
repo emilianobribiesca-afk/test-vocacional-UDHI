@@ -217,13 +217,19 @@ export default function Register() {
       </div>
 
       {/* Right Panel - Only on Desktop */}
-      <div className="hidden lg:flex lg:w-1/2 bg-[#0D47A1] items-center justify-center p-12 xl:p-16">
-        <div className="max-w-lg text-center">
-          <h2 className="text-4xl xl:text-5xl font-bold text-white leading-tight mb-6">
-            No la carrera más popular.<br />
-            La que va contigo.
+      <div className="hidden lg:flex lg:w-1/2 bg-blue-50 items-center justify-center p-12 xl:p-16">
+        <div className="max-w-lg">
+          <h2 className="text-3xl xl:text-4xl font-bold text-gray-900 mb-5 leading-tight">
+            En UDHI queremos que elijas bien
           </h2>
-          <p className="text-blue-300 text-base">Modelo RIASEC de Holland · 80 preguntas · 20 min</p>
+          <p className="text-lg text-gray-600 mb-8 leading-relaxed">
+            No la carrera más popular, ni la que te dijeron. La que va contigo. Por eso diseñamos este test: para que explores tus intereses y descubras qué camino profesional se alinea con tu forma de pensar y actuar.
+          </p>
+          <div className="space-y-3 text-gray-700">
+            <p className="flex items-start gap-2"><span className="text-[#1565C0] font-bold">→</span> Basado en el modelo RIASEC de Holland</p>
+            <p className="flex items-start gap-2"><span className="text-[#1565C0] font-bold">→</span> Personalizado con las carreras UDHI</p>
+            <p className="flex items-start gap-2"><span className="text-[#1565C0] font-bold">→</span> 20 minutos que pueden cambiar tu perspectiva</p>
+          </div>
         </div>
       </div>
     </div>
