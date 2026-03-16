@@ -217,13 +217,13 @@ export default function Register() {
       </div>
 
       {/* Right Panel - Only on Desktop */}
-      <div className="hidden lg:flex lg:w-1/2 bg-[#0D47A1] items-end justify-start p-12 xl:p-16">
-        <div className="max-w-md">
-          <p className="text-blue-300 text-sm font-medium mb-4">Modelo RIASEC de Holland · 80 preguntas · 20 min</p>
-          <h2 className="text-3xl xl:text-4xl font-bold text-white leading-snug">
+      <div className="hidden lg:flex lg:w-1/2 bg-[#0D47A1] items-center justify-center p-12 xl:p-16">
+        <div className="max-w-lg text-center">
+          <h2 className="text-4xl xl:text-5xl font-bold text-white leading-tight mb-6">
             No la carrera más popular.<br />
             La que va contigo.
           </h2>
+          <p className="text-blue-300 text-base">Modelo RIASEC de Holland · 80 preguntas · 20 min</p>
         </div>
       </div>
     </div>
