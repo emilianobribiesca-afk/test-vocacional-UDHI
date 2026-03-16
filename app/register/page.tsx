@@ -82,7 +82,7 @@ export default function Register() {
               alt="UDHI - Universidad de Dolores Hidalgo"
               width={130}
               height={23}
-              className="h-auto w-full max-w-[120px] sm:max-w-[130px] logo-blue mb-4 sm:mb-5 -ml-[10px]"
+              className="h-auto w-full max-w-[120px] sm:max-w-[130px] logo-blue mb-4 sm:mb-5 -ml-[13px]"
               priority
             />
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#0D47A1] mb-3 sm:mb-4">
