@@ -37,7 +37,9 @@ export default function Register() {
       newErrors.email = 'Ingresa un correo electrónico válido';
     }
 
-    if (formData.telefono && formData.telefono.length < 10) {
+    if (!formData.telefono.trim()) {
+      newErrors.telefono = 'El teléfono es requerido';
+    } else if (formData.telefono.length < 10) {
       newErrors.telefono = 'El teléfono debe tener al menos 10 dígitos';
     }
 
@@ -82,7 +84,7 @@ export default function Register() {
               alt="UDHI - Universidad de Dolores Hidalgo"
               width={130}
               height={23}
-              className="h-auto w-full max-w-[120px] sm:max-w-[130px] logo-blue mb-4 sm:mb-5 -ml-[13px]"
+              className="h-auto w-full max-w-[120px] sm:max-w-[130px] logo-blue mb-4 sm:mb-5 -ml-[14px]"
               priority
             />
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#0D47A1] mb-3 sm:mb-4">
@@ -164,7 +166,7 @@ export default function Register() {
             {/* Teléfono */}
             <div>
               <label htmlFor="telefono" className="block text-sm font-medium text-gray-700 mb-2">
-                Teléfono <span className="text-gray-400">(Opcional)</span>
+                Teléfono
               </label>
               <input
                 type="tel"
