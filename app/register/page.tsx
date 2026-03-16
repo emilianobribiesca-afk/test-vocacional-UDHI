@@ -82,10 +82,10 @@ export default function Register() {
               alt="UDHI - Universidad de Dolores Hidalgo"
               width={130}
               height={23}
-              className="h-auto w-full max-w-[120px] sm:max-w-[130px] drop-shadow-md logo-blue mb-4 sm:mb-5 -ml-1"
+              className="h-auto w-full max-w-[120px] sm:max-w-[130px] logo-blue mb-4 sm:mb-5"
               priority
             />
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold bg-gradient-to-r from-[#0D47A1] to-[#1565C0] bg-clip-text text-transparent mb-3 sm:mb-4">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-[#0D47A1] mb-3 sm:mb-4">
               Test Vocacional
             </h1>
             <p className="text-lg sm:text-xl text-gray-600">
