@@ -18,7 +18,10 @@ export async function POST(request: Request) {
     const html = generateCallCenterEmailHTML(userInfo, results, resultsUrl);
 
     // Enviar con Resend
-    const { error } = await resend.emails.send({
+    console.log('Sending email to:', RECIPIENT, 'from:', 'noreply@send.testvocacionaludhi.com');
+    console.log('API Key exists:', !!process.env.RESEND_API_KEY);
+
+    const { data, error } = await resend.emails.send({
       from: 'Test Vocacional UDHI <noreply@send.testvocacionaludhi.com>',
       to: [RECIPIENT],
       subject: `Nuevo Test: ${userInfo.nombre} ${userInfo.apellido} - ${results.hollandCode}`,
@@ -26,10 +29,11 @@ export async function POST(request: Request) {
     });
 
     if (error) {
-      console.error('Resend error:', error);
+      console.error('Resend error:', JSON.stringify(error));
       return Response.json({ success: false, message: error.message }, { status: 500 });
     }
 
+    console.log('Email sent successfully:', data);
     return Response.json({ success: true });
   } catch (error) {
     console.error('Error al enviar email:', error);
