@@ -440,13 +440,7 @@ export default function Results() {
 
       {/* Acciones */}
       <div className="px-6 lg:px-12 py-10 lg:py-16 print-hide">
-        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row gap-4 justify-center">
-          <button
-            onClick={handleRestart}
-            className="px-8 py-3.5 border-2 border-gray-300 text-gray-700 font-semibold rounded-xl hover:bg-gray-50 transition-colors"
-          >
-            Realizar nuevamente
-          </button>
+        <div className="max-w-6xl mx-auto flex justify-center">
           <button
             onClick={() => {
               setShowAllCareers(true);
