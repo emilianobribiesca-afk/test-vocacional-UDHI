@@ -164,7 +164,9 @@ export default function Results() {
     const encoded = params.get('d');
     if (encoded) {
       try {
-        const base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
+        // Convert base64url to base64 and add padding
+        let base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
+        while (base64.length % 4) base64 += '=';
         const decoded = JSON.parse(atob(base64));
         const reconstructed = reconstructResultsFromScores(decoded.s);
         setResults(reconstructed);
