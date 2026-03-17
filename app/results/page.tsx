@@ -225,7 +225,7 @@ export default function Results() {
             className="h-auto w-full max-w-[110px] logo-blue"
             priority
           />
-          <span className="text-sm text-gray-500">{studentName ? `Resultados de ${studentName}` : 'Resultados del Test'}</span>
+          <span className={`text-sm font-medium ${studentName ? 'text-gray-900' : 'text-gray-500'}`}>{studentName ? `Resultados de ${studentName}` : 'Resultados del Test'}</span>
         </div>
       </div>
 
