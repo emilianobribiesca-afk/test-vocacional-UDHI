@@ -203,13 +203,14 @@ export default function Results() {
     );
   }
 
-  const visibleCareers = showAllCareers ? results.topCareers : results.topCareers.slice(0, 5);
+  const [isPrinting, setIsPrinting] = useState(false);
+  const visibleCareers = (showAllCareers || isPrinting) ? results.topCareers : results.topCareers.slice(0, 5);
   const topType = riasecCategories.find(c => c.id === results.percentages[0].category)!;
 
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
-      <div className="border-b border-gray-200 sticky top-0 z-10 bg-white">
+      <div className="border-b border-gray-200 sticky top-0 z-10 bg-white print-no-sticky">
         <div className="px-6 lg:px-12 py-4 flex items-center justify-between">
           <Image
             src="/logo-udhi.webp"
@@ -250,13 +251,13 @@ export default function Results() {
       {(() => {
         const archetype = getArchetype(results.hollandCode);
         return (
-          <div className="min-h-[80vh] flex items-center px-6 lg:px-16 py-16 bg-gradient-to-br from-[#0a1628] via-[#0D47A1] to-[#1565C0] text-white">
+          <div className="min-h-[80vh] flex items-center px-6 lg:px-16 py-16 bg-gradient-to-br from-[#0a1628] via-[#0D47A1] to-[#1565C0] text-white print-hero-light">
             <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center lg:items-end justify-between gap-12">
               {/* Left: Name + tagline */}
               <div className="lg:flex-1">
-                <p className="text-xs font-semibold text-blue-300 uppercase tracking-[0.25em] mb-4">Tu Perfil Vocacional</p>
+                <p className="text-xs font-semibold text-blue-300 uppercase tracking-[0.25em] mb-4 print-hero-label">Tu Perfil Vocacional</p>
                 <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold mb-5 leading-tight">{archetype.name}</h1>
-                <p className="text-xl sm:text-2xl text-blue-200 max-w-lg leading-relaxed">{archetype.tagline}</p>
+                <p className="text-xl sm:text-2xl text-blue-200 max-w-lg leading-relaxed print-hero-subtitle">{archetype.tagline}</p>
               </div>
 
               {/* Right: Code + types */}
@@ -269,8 +270,8 @@ export default function Results() {
                         <div className="text-7xl lg:text-8xl font-black text-white mb-2">
                           {p.category}
                         </div>
-                        <div className="text-sm font-semibold text-blue-200">{cat.name}</div>
-                        <div className="text-xs text-blue-300">{p.percentage}%</div>
+                        <div className="text-sm font-semibold text-blue-200 print-hero-subtitle">{cat.name}</div>
+                        <div className="text-xs text-blue-300 print-hero-label">{p.percentage}%</div>
                       </div>
                     );
                   })}
@@ -289,7 +290,7 @@ export default function Results() {
             {results.percentages.slice(0, 3).map((p, i) => {
               const cat = riasecCategories.find(c => c.id === p.category)!;
               return (
-                <div key={i} className={`rounded-2xl p-6 lg:p-8 border-2 ${
+                <div key={i} className={`rounded-2xl p-6 lg:p-8 border-2 print-no-break ${
                   i === 0 ? 'border-[#1565C0] bg-blue-50' : 'border-gray-200 bg-white'
                 }`}>
                   <div className="flex items-center gap-3 mb-4">
@@ -366,14 +367,14 @@ export default function Results() {
       </div>
 
       {/* Carreras UDHI */}
-      <div className="px-6 lg:px-12 py-10 lg:py-16 border-b border-gray-100">
+      <div className="px-6 lg:px-12 py-10 lg:py-16 border-b border-gray-100 print-break-before">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Carreras UDHI para ti</h2>
           <p className="text-gray-500 mb-8">Ordenadas por compatibilidad con tu perfil {results.hollandCode}</p>
 
           <div className="space-y-4">
             {visibleCareers.map((career, index) => (
-              <div key={index} className="p-5 border border-gray-200 rounded-xl hover:border-[#1565C0] transition-colors">
+              <div key={index} className="p-5 border border-gray-200 rounded-xl hover:border-[#1565C0] transition-colors print-no-break">
                 <div className="flex items-start gap-4">
                   {/* Rank */}
                   <div className={`w-9 h-9 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0 mt-0.5 ${
@@ -411,27 +412,29 @@ export default function Results() {
             ))}
           </div>
 
-          {!showAllCareers && results.topCareers.length > 5 && (
-            <button
-              onClick={() => setShowAllCareers(true)}
-              className="w-full mt-4 py-3 text-sm font-medium text-[#1565C0] border border-gray-200 rounded-xl hover:bg-blue-50 transition-colors"
-            >
-              Ver todas las carreras ({results.topCareers.length - 5} más)
-            </button>
-          )}
-          {showAllCareers && (
-            <button
-              onClick={() => setShowAllCareers(false)}
-              className="w-full mt-4 py-3 text-sm font-medium text-gray-500 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
-            >
-              Ver menos
-            </button>
-          )}
+          <div className="print-hide">
+            {!showAllCareers && results.topCareers.length > 5 && (
+              <button
+                onClick={() => setShowAllCareers(true)}
+                className="w-full mt-4 py-3 text-sm font-medium text-[#1565C0] border border-gray-200 rounded-xl hover:bg-blue-50 transition-colors"
+              >
+                Ver todas las carreras ({results.topCareers.length - 5} más)
+              </button>
+            )}
+            {showAllCareers && (
+              <button
+                onClick={() => setShowAllCareers(false)}
+                className="w-full mt-4 py-3 text-sm font-medium text-gray-500 border border-gray-200 rounded-xl hover:bg-gray-50 transition-colors"
+              >
+                Ver menos
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
       {/* Acciones */}
-      <div className="px-6 lg:px-12 py-10 lg:py-16">
+      <div className="px-6 lg:px-12 py-10 lg:py-16 print-hide">
         <div className="max-w-6xl mx-auto flex flex-col sm:flex-row gap-4 justify-center">
           <button
             onClick={handleRestart}
@@ -440,7 +443,13 @@ export default function Results() {
             Realizar nuevamente
           </button>
           <button
-            onClick={() => window.print()}
+            onClick={() => {
+              setIsPrinting(true);
+              setTimeout(() => {
+                window.print();
+                setIsPrinting(false);
+              }, 100);
+            }}
             className="px-8 py-3.5 bg-[#1565C0] text-white font-semibold rounded-xl hover:bg-[#0D47A1] transition-colors"
           >
             Descargar PDF

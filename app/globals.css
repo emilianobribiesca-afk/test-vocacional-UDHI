@@ -28,3 +28,63 @@ body {
 .logo-blue {
   filter: brightness(0) saturate(100%) invert(24%) sepia(95%) saturate(1800%) hue-rotate(203deg) brightness(92%) contrast(92%);
 }
+
+@media print {
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+
+  /* Hide non-printable elements */
+  .print-hide {
+    display: none !important;
+  }
+
+  /* Force show all careers */
+  .print-show-all {
+    display: block !important;
+  }
+
+  /* Prevent section breaks */
+  .print-no-break {
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Force page break before section */
+  .print-break-before {
+    page-break-before: always;
+    break-before: page;
+  }
+
+  /* Hero: white bg with dark text for print */
+  .print-hero-light {
+    background: #f0f4ff !important;
+    min-height: auto !important;
+    padding-top: 40px !important;
+    padding-bottom: 40px !important;
+  }
+  .print-hero-light h1,
+  .print-hero-light div,
+  .print-hero-light p,
+  .print-hero-light span {
+    color: #0D47A1 !important;
+  }
+  .print-hero-light .print-hero-subtitle {
+    color: #4b5563 !important;
+  }
+  .print-hero-light .print-hero-label {
+    color: #6b7280 !important;
+  }
+
+  /* Remove sticky header */
+  .print-no-sticky {
+    position: static !important;
+    box-shadow: none !important;
+  }
+
+  /* Compact spacing */
+  body {
+    font-size: 14px;
+  }
+}
