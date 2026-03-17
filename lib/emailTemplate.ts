@@ -1,5 +1,10 @@
 import { DetailedResults, riasecCategories } from './professionalVocationalTestV3';
 
+function escapeHtml(text: string): string {
+  const map: Record<string, string> = { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' };
+  return (text || '').replace(/[&<>"']/g, m => map[m]);
+}
+
 export function getArchetype(code: string): { name: string; tagline: string } {
   const archetypes: Record<string, { name: string; tagline: string }> = {
     'RI': { name: 'El Ingeniero', tagline: 'Construyes soluciones con lógica y precisión' },
@@ -111,9 +116,9 @@ export function generateCallCenterEmailHTML(
     <td style="padding:24px 40px;background:#eff6ff;border-bottom:2px solid #1565C0;">
       <div style="font-size:16px;font-weight:700;color:#1565C0;margin-bottom:12px;">Datos del Estudiante</div>
       <table cellpadding="0" cellspacing="0" border="0" style="font-size:14px;color:#1f2937;">
-        <tr><td style="font-weight:600;padding:3px 16px 3px 0;">Nombre:</td><td>${userInfo.nombre} ${userInfo.apellido}</td></tr>
-        <tr><td style="font-weight:600;padding:3px 16px 3px 0;">Email:</td><td>${userInfo.email}</td></tr>
-        <tr><td style="font-weight:600;padding:3px 16px 3px 0;">Teléfono:</td><td>${userInfo.telefono}</td></tr>
+        <tr><td style="font-weight:600;padding:3px 16px 3px 0;">Nombre:</td><td>${escapeHtml(userInfo.nombre)} ${escapeHtml(userInfo.apellido)}</td></tr>
+        <tr><td style="font-weight:600;padding:3px 16px 3px 0;">Email:</td><td>${escapeHtml(userInfo.email)}</td></tr>
+        <tr><td style="font-weight:600;padding:3px 16px 3px 0;">Teléfono:</td><td>${escapeHtml(userInfo.telefono)}</td></tr>
         <tr><td style="font-weight:600;padding:3px 16px 3px 0;">Fecha:</td><td>${now}</td></tr>
       </table>
       <div style="margin-top:16px;">
@@ -135,7 +140,7 @@ export function generateCallCenterEmailHTML(
   <!-- Greeting -->
   <tr>
     <td style="padding:32px 40px 16px;">
-      <div style="font-size:18px;font-weight:700;color:#1f2937;">Resultados del test de ${userInfo.nombre} ${userInfo.apellido}</div>
+      <div style="font-size:18px;font-weight:700;color:#1f2937;">Resultados del test de ${escapeHtml(userInfo.nombre)} ${escapeHtml(userInfo.apellido)}</div>
       <div style="font-size:14px;color:#6b7280;margin-top:8px;line-height:1.6;">El estudiante completó el Test Vocacional UDHI. A continuación se presentan los resultados.</div>
     </td>
   </tr>

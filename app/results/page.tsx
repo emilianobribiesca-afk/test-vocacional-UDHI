@@ -192,11 +192,6 @@ export default function Results() {
     }
   }, [router]);
 
-  const handleRestart = () => {
-    localStorage.removeItem('professionalVocationalResults');
-    localStorage.removeItem('userInfo');
-    router.push('/register');
-  };
 
   if (loading || !results) {
     return (
@@ -446,21 +441,6 @@ export default function Results() {
               </button>
             )}
           </div>
-        </div>
-      </div>
-
-      {/* Acciones */}
-      <div className="px-6 lg:px-12 py-10 lg:py-16 print-hide">
-        <div className="max-w-6xl mx-auto flex justify-center">
-          <button
-            onClick={() => {
-              setShowAllCareers(true);
-              setTimeout(() => window.print(), 100);
-            }}
-            className="px-8 py-3.5 bg-[#1565C0] text-white font-semibold rounded-xl hover:bg-[#0D47A1] transition-colors"
-          >
-            Descargar PDF
-          </button>
         </div>
       </div>
 

@@ -798,6 +798,11 @@ export function calculateProfessionalResults(
  * Usado para cargar resultados desde URL (link del call center).
  */
 export function reconstructResultsFromScores(scores: RIASECScores): DetailedResults {
+  // Validar y clampar scores al rango válido
+  for (const type of RIASEC_ORDER) {
+    const val = scores[type];
+    scores[type] = Math.max(MIN_SCORE_PER_CATEGORY, Math.min(MAX_SCORE_PER_CATEGORY, Math.round(val || MIN_SCORE_PER_CATEGORY)));
+  }
   const rawValues = RIASEC_ORDER.map(type => scores[type]);
 
   const percentages = RIASEC_ORDER
