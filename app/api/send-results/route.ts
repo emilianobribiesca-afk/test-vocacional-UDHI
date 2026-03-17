@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     console.log('API Key exists:', !!process.env.RESEND_API_KEY);
 
     const { data, error } = await resend.emails.send({
-      from: 'Test Vocacional UDHI <noreply@send.testvocacionaludhi.com>',
+      from: 'Test Vocacional UDHI <noreply@testvocacionaludhi.com>',
       to: [RECIPIENT],
       subject: `Nuevo Test: ${userInfo.nombre} ${userInfo.apellido} - ${results.hollandCode}`,
       html
