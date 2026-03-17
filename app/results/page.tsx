@@ -159,11 +159,13 @@ export default function Results() {
   const [fromLink, setFromLink] = useState(false);
 
   useEffect(() => {
-    // 1. Intentar cargar desde URL param (link del call center)
-    const params = new URLSearchParams(window.location.search);
-    const encoded = params.get('d');
-    if (encoded) {
-      try {
+    if (typeof window === 'undefined') return;
+
+    try {
+      // 1. Intentar cargar desde URL param (link del call center)
+      const params = new URLSearchParams(window.location.search);
+      const encoded = params.get('d');
+      if (encoded) {
         // Convert base64url to base64 and add padding
         let base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
         while (base64.length % 4) base64 += '=';
@@ -173,13 +175,9 @@ export default function Results() {
         setFromLink(true);
         setLoading(false);
         return;
-      } catch (e) {
-        console.error('Error decoding results from URL:', e);
       }
-    }
 
-    // 2. Fallback: localStorage
-    try {
+      // 2. Fallback: localStorage
       const storedResults = localStorage.getItem('professionalVocationalResults');
       if (storedResults) {
         setResults(JSON.parse(storedResults));
@@ -187,7 +185,8 @@ export default function Results() {
       } else {
         router.push('/register');
       }
-    } catch {
+    } catch (e) {
+      console.error('Error loading results:', e);
       router.push('/register');
     }
   }, [router]);
