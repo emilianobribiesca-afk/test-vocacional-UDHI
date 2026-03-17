@@ -259,10 +259,10 @@ export default function Results() {
           <div className="min-h-[80vh] flex items-center px-6 lg:px-16 py-16 bg-white print-hero-compact">
             <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center lg:items-end justify-between gap-12">
               {/* Left: Name + tagline */}
-              <div className="lg:flex-1">
+              <div className="lg:flex-1 text-center lg:text-left">
                 <p className="text-xs font-semibold text-gray-500 uppercase tracking-[0.25em] mb-4">Tu Perfil Vocacional</p>
                 <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold mb-5 leading-tight text-[#0D47A1]">{archetype.name}</h1>
-                <p className="text-xl sm:text-2xl text-gray-500 max-w-lg leading-relaxed">{archetype.tagline}</p>
+                <p className="text-xl sm:text-2xl text-gray-500 max-w-lg leading-relaxed mx-auto lg:mx-0">{archetype.tagline}</p>
               </div>
 
               {/* Right: Code + types */}
