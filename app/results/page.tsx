@@ -256,13 +256,13 @@ export default function Results() {
       {(() => {
         const archetype = getArchetype(results.hollandCode);
         return (
-          <div className="min-h-[80vh] flex items-center px-6 lg:px-16 py-16 bg-gradient-to-br from-[#0a1628] via-[#0D47A1] to-[#1565C0] text-white print-hero-light">
+          <div className="min-h-[80vh] flex items-center px-6 lg:px-16 py-16 bg-[#f0f4ff] print-hero-compact">
             <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center lg:items-end justify-between gap-12">
               {/* Left: Name + tagline */}
               <div className="lg:flex-1">
-                <p className="text-xs font-semibold text-blue-300 uppercase tracking-[0.25em] mb-4 print-hero-label">Tu Perfil Vocacional</p>
-                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold mb-5 leading-tight">{archetype.name}</h1>
-                <p className="text-xl sm:text-2xl text-blue-200 max-w-lg leading-relaxed print-hero-subtitle">{archetype.tagline}</p>
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-[0.25em] mb-4">Tu Perfil Vocacional</p>
+                <h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold mb-5 leading-tight text-[#0D47A1]">{archetype.name}</h1>
+                <p className="text-xl sm:text-2xl text-gray-500 max-w-lg leading-relaxed">{archetype.tagline}</p>
               </div>
 
               {/* Right: Code + types */}
@@ -272,11 +272,11 @@ export default function Results() {
                     const cat = riasecCategories.find(c => c.id === p.category)!;
                     return (
                       <div key={i} className="text-center">
-                        <div className="text-7xl lg:text-8xl font-black text-white mb-2">
+                        <div className="text-7xl lg:text-8xl font-black text-[#0D47A1] mb-2">
                           {p.category}
                         </div>
-                        <div className="text-sm font-semibold text-blue-200 print-hero-subtitle">{cat.name}</div>
-                        <div className="text-xs text-blue-300 print-hero-label">{p.percentage}%</div>
+                        <div className="text-sm font-semibold text-gray-600">{cat.name}</div>
+                        <div className="text-xs text-gray-400">{p.percentage}%</div>
                       </div>
                     );
                   })}
