@@ -333,7 +333,7 @@ export default function Results() {
       </div>
 
       {/* Hexágono + Barras */}
-      <div className="px-6 lg:px-12 py-10 lg:py-16 border-b border-gray-100">
+      <div className="px-6 lg:px-12 py-10 lg:py-16 border-b border-gray-100 print-keep-together">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl font-bold text-gray-900 mb-8 text-center">Tus Intereses</h2>
 
@@ -371,7 +371,7 @@ export default function Results() {
       </div>
 
       {/* Carreras UDHI */}
-      <div className="px-6 lg:px-12 py-10 lg:py-16 border-b border-gray-100 print-break-before">
+      <div className="px-6 lg:px-12 py-10 lg:py-16 border-b border-gray-100">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl font-bold text-gray-900 mb-2">Carreras UDHI para ti</h2>
           <p className="text-gray-500 mb-8">Ordenadas por compatibilidad con tu perfil {results.hollandCode}</p>
@@ -459,7 +459,7 @@ export default function Results() {
       </div>
 
       {/* Footer */}
-      <div className="border-t border-gray-100 px-6 lg:px-12 py-6">
+      <div className="border-t border-gray-100 px-6 lg:px-12 py-6 print-hide">
         <p className="text-center text-xs text-gray-400">
           Test Vocacional UDHI · Modelo RIASEC de John L. Holland
         </p>
