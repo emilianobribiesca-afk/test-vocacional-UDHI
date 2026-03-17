@@ -177,11 +177,15 @@ export default function Results() {
     }
 
     // 2. Fallback: localStorage
-    const storedResults = localStorage.getItem('professionalVocationalResults');
-    if (storedResults) {
-      setResults(JSON.parse(storedResults));
-      setLoading(false);
-    } else {
+    try {
+      const storedResults = localStorage.getItem('professionalVocationalResults');
+      if (storedResults) {
+        setResults(JSON.parse(storedResults));
+        setLoading(false);
+      } else {
+        router.push('/register');
+      }
+    } catch {
       router.push('/register');
     }
   }, [router]);
