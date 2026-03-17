@@ -208,8 +208,7 @@ export default function Results() {
     );
   }
 
-  const [isPrinting, setIsPrinting] = useState(false);
-  const visibleCareers = (showAllCareers || isPrinting) ? results.topCareers : results.topCareers.slice(0, 5);
+  const visibleCareers = showAllCareers ? results.topCareers : results.topCareers.slice(0, 5);
   const topType = riasecCategories.find(c => c.id === results.percentages[0].category)!;
 
   return (
@@ -449,11 +448,8 @@ export default function Results() {
           </button>
           <button
             onClick={() => {
-              setIsPrinting(true);
-              setTimeout(() => {
-                window.print();
-                setIsPrinting(false);
-              }, 100);
+              setShowAllCareers(true);
+              setTimeout(() => window.print(), 100);
             }}
             className="px-8 py-3.5 bg-[#1565C0] text-white font-semibold rounded-xl hover:bg-[#0D47A1] transition-colors"
           >
