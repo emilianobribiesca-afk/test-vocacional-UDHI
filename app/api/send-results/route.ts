@@ -2,7 +2,7 @@ import { Resend } from 'resend';
 import { generateCallCenterEmailHTML } from '@/lib/emailTemplate';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const RECIPIENT = 'gibrangoc115@gmail.com'; // demo, luego: callcenter_slp@udhi.edu.mx
+const RECIPIENT = 'gibrangoc15@gmail.com'; // demo, luego: callcenter_slp@udhi.edu.mx
 
 export async function POST(request: Request) {
   try {
