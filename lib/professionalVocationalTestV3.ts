@@ -792,3 +792,54 @@ export function calculateProfessionalResults(
     validation
   };
 }
+
+/**
+ * Reconstruye resultados completos desde solo los 6 scores RIASEC.
+ * Usado para cargar resultados desde URL (link del call center).
+ */
+export function reconstructResultsFromScores(scores: RIASECScores): DetailedResults {
+  const rawValues = RIASEC_ORDER.map(type => scores[type]);
+
+  const percentages = RIASEC_ORDER
+    .map(category => ({
+      category,
+      rawScore: scores[category],
+      percentage: calculatePercentage(scores[category]),
+      percentile: calculateIpsativePercentile(scores[category], rawValues)
+    }))
+    .sort((a, b) => {
+      if (b.rawScore !== a.rawScore) return b.rawScore - a.rawScore;
+      return RIASEC_ORDER.indexOf(a.category) - RIASEC_ORDER.indexOf(b.category);
+    });
+
+  const { code: hollandCode, alternatives: alternativeHollandCodes } = generateHollandCode(scores);
+  const consistency = calculateConsistency(hollandCode);
+  const differentiation = calculateDifferentiation(rawValues);
+  const predigerDimensions = calculatePredigerDimensions(scores);
+  const primaryType = riasecCategories.find(c => c.id === percentages[0].category)!;
+  const secondaryType = riasecCategories.find(c => c.id === percentages[1].category)!;
+  const tertiaryType = riasecCategories.find(c => c.id === percentages[2].category)!;
+  const recommendations = generateRecommendations(percentages, consistency, differentiation);
+  const topCareers = generateCareerMatches(scores, hollandCode);
+
+  return {
+    scores,
+    percentages,
+    hollandCode,
+    alternativeHollandCodes: alternativeHollandCodes.length > 0 ? alternativeHollandCodes : undefined,
+    consistency,
+    differentiation,
+    predigerDimensions,
+    primaryType,
+    secondaryType,
+    tertiaryType,
+    recommendations,
+    topCareers,
+    validation: {
+      isValid: true,
+      warnings: [],
+      recommendation: 'VALID',
+      details: { infrequencyScore: 0, inconsistencyCount: 0, responseVariance: 0, directedFailCount: 0 }
+    }
+  };
+}

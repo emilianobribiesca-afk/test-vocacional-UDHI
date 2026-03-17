@@ -159,7 +159,7 @@ export default function Register() {
                 <p className="text-red-500 text-sm mt-1">{errors.email}</p>
               )}
               <p className="text-gray-500 text-sm mt-1">
-                Recibirás tus resultados en este correo
+                Tu correo será utilizado para contactarte
               </p>
             </div>
 
@@ -286,8 +286,8 @@ export default function Register() {
                 </div>
               </div>
               <div>
-                <h3 className="font-bold text-gray-900 mb-1">Resultados por email</h3>
-                <p className="text-gray-700">Recibe tu informe completo en tu correo</p>
+                <h3 className="font-bold text-gray-900 mb-1">Atención personalizada</h3>
+                <p className="text-gray-700">Un asesor de UDHI te contactará con tus resultados</p>
               </div>
             </div>
           </div>

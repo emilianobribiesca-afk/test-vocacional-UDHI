@@ -19,6 +19,7 @@ export default function Test() {
   const [selectedOption, setSelectedOption] = useState<LikertScale | null>(null);
   const [userName, setUserName] = useState('');
   const [startTime, setStartTime] = useState<number>(0);
+  const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => {
     const userInfo = localStorage.getItem('userInfo');
@@ -37,7 +38,7 @@ export default function Test() {
     setSelectedOption(value);
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (selectedOption !== null) {
       const newAnswers = {
         ...answers,
@@ -50,10 +51,23 @@ export default function Test() {
         const nextQuestionId = orderedQuestions[currentQuestion + 1].id;
         setSelectedOption(newAnswers[nextQuestionId] || null);
       } else {
+        // Calcular resultados y enviar al call center
         const endTime = Date.now();
         const results = calculateProfessionalResults(newAnswers, { startTime, endTime });
-        localStorage.setItem('professionalVocationalResults', JSON.stringify(results));
-        router.push('/results');
+        const userInfoStr = localStorage.getItem('userInfo');
+        const userInfo = userInfoStr ? JSON.parse(userInfoStr) : {};
+
+        setSubmitting(true);
+        try {
+          await fetch('/api/send-results', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ userInfo, results }),
+          });
+        } catch {
+          // Si falla el envío, continuar de todos modos
+        }
+        router.push(`/thanks?nombre=${encodeURIComponent(userInfo.nombre || '')}`);
       }
     }
   };
@@ -71,6 +85,15 @@ export default function Test() {
 
   const displayQuestionNumber = currentQuestion + 1;
   const totalQuestions = orderedQuestions.length;
+
+  if (submitting) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center">
+        <div className="w-16 h-16 border-4 border-[#1565C0] border-t-transparent rounded-full animate-spin mb-6"></div>
+        <p className="text-lg text-gray-700 font-medium">Enviando tus respuestas...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-white flex flex-col">

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { DetailedResults, riasecCategories, RIASECType } from '@/lib/professionalVocationalTestV3';
+import { DetailedResults, riasecCategories, RIASECType, reconstructResultsFromScores } from '@/lib/professionalVocationalTestV3';
 import Image from 'next/image';
 
 // Hexágono grande y limpio
@@ -156,12 +156,29 @@ export default function Results() {
   const [results, setResults] = useState<DetailedResults | null>(null);
   const [loading, setLoading] = useState(true);
   const [showAllCareers, setShowAllCareers] = useState(false);
+  const [fromLink, setFromLink] = useState(false);
 
   useEffect(() => {
-    const storedResults = localStorage.getItem('professionalVocationalResults');
-    const userInfo = localStorage.getItem('userInfo');
+    // 1. Intentar cargar desde URL param (link del call center)
+    const params = new URLSearchParams(window.location.search);
+    const encoded = params.get('d');
+    if (encoded) {
+      try {
+        const base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
+        const decoded = JSON.parse(atob(base64));
+        const reconstructed = reconstructResultsFromScores(decoded.s);
+        setResults(reconstructed);
+        setFromLink(true);
+        setLoading(false);
+        return;
+      } catch (e) {
+        console.error('Error decoding results from URL:', e);
+      }
+    }
 
-    if (storedResults && userInfo) {
+    // 2. Fallback: localStorage
+    const storedResults = localStorage.getItem('professionalVocationalResults');
+    if (storedResults) {
       setResults(JSON.parse(storedResults));
       setLoading(false);
     } else {

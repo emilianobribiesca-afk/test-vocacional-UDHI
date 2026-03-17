@@ -1,71 +1,38 @@
-import { NextResponse } from 'next/server';
+import { Resend } from 'resend';
+import { generateCallCenterEmailHTML } from '@/lib/emailTemplate';
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+const RECIPIENT = 'gibrangoc115@gmail.com'; // demo, luego: callcenter_slp@udhi.edu.mx
 
 export async function POST(request: Request) {
   try {
     const { userInfo, results } = await request.json();
 
-    // Aquí deberías configurar nodemailer o usar un servicio de email como SendGrid, Resend, etc.
-    // Por ahora, simularemos el envío
+    // Generar URL con scores codificados
+    const payload = JSON.stringify({ s: results.scores });
+    const encoded = Buffer.from(payload).toString('base64url');
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://testvocacionaludhi.com';
+    const resultsUrl = `${baseUrl}/results?d=${encoded}`;
 
-    console.log('Enviando resultados a:', userInfo.email);
-    console.log('Nombre:', userInfo.nombre, userInfo.apellido);
-    console.log('Código Holland:', results.hollandCode);
-    console.log('Top Carreras:', results.topCareers.map((c: any) => c.name).join(', '));
+    // Generar email HTML
+    const html = generateCallCenterEmailHTML(userInfo, results, resultsUrl);
 
-    // Simular delay de envío
-    await new Promise(resolve => setTimeout(resolve, 1000));
-
-    // TODO: Implementar envío real de email
-    // Ejemplo con nodemailer (requiere configuración SMTP):
-    /*
-    const nodemailer = require('nodemailer');
-    const transporter = nodemailer.createTransporter({
-      host: 'smtp.gmail.com',
-      port: 587,
-      secure: false,
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASSWORD
-      }
+    // Enviar con Resend
+    const { error } = await resend.emails.send({
+      from: 'Test Vocacional UDHI <noreply@send.testvocacionaludhi.com>',
+      to: [RECIPIENT],
+      subject: `Nuevo Test: ${userInfo.nombre} ${userInfo.apellido} - ${results.hollandCode}`,
+      html
     });
 
-    const emailHTML = `
-      <h1>Resultados de tu Test Vocacional UDHI</h1>
-      <h2>Hola ${userInfo.nombre} ${userInfo.apellido}</h2>
-      <p>Tu Código Holland es: <strong>${results.hollandCode}</strong></p>
-      <h3>Tus áreas principales:</h3>
-      <ul>
-        <li>${results.primaryType.fullName}: ${results.percentages[0].percentage}%</li>
-        <li>${results.secondaryType.fullName}: ${results.percentages[1].percentage}%</li>
-        <li>${results.tertiaryType.fullName}: ${results.percentages[2].percentage}%</li>
-      </ul>
-      <h3>Carreras recomendadas:</h3>
-      <ul>
-        ${results.topCareers.slice(0, 5).map((career: any) =>
-          `<li><strong>${career.name}</strong> - ${career.matchPercentage}% compatibilidad</li>`
-        ).join('')}
-      </ul>
-      <p>Para ver tus resultados completos, visita: <a href="${process.env.NEXT_PUBLIC_BASE_URL}/results">Ver resultados completos</a></p>
-    `;
+    if (error) {
+      console.error('Resend error:', error);
+      return Response.json({ success: false, message: error.message }, { status: 500 });
+    }
 
-    await transporter.sendMail({
-      from: `"Test Vocacional UDHI" <${process.env.EMAIL_USER}>`,
-      to: userInfo.email,
-      subject: `Resultados de tu Test Vocacional - Código ${results.hollandCode}`,
-      html: emailHTML
-    });
-    */
-
-    return NextResponse.json({
-      success: true,
-      message: 'Resultados enviados correctamente'
-    });
-
+    return Response.json({ success: true });
   } catch (error) {
     console.error('Error al enviar email:', error);
-    return NextResponse.json(
-      { success: false, message: 'Error al enviar el correo' },
-      { status: 500 }
-    );
+    return Response.json({ success: false, message: 'Error interno' }, { status: 500 });
   }
 }
