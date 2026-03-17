@@ -225,7 +225,18 @@ export default function Results() {
             className="h-auto w-full max-w-[110px] logo-blue"
             priority
           />
-          <span className={`text-sm font-medium ${studentName ? 'text-gray-900' : 'text-gray-500'}`}>{studentName ? `Resultados de ${studentName}` : 'Resultados del Test'}</span>
+          <div className="flex items-center gap-4">
+            <span className={`text-sm font-medium ${studentName ? 'text-gray-900' : 'text-gray-500'}`}>{studentName ? `Resultados de ${studentName}` : 'Resultados del Test'}</span>
+            <button
+              onClick={() => {
+                setShowAllCareers(true);
+                setTimeout(() => window.print(), 100);
+              }}
+              className="px-4 py-2 bg-[#1565C0] text-white text-sm font-semibold rounded-lg hover:bg-[#0D47A1] transition-colors print-hide"
+            >
+              Descargar PDF
+            </button>
+          </div>
         </div>
       </div>
 
