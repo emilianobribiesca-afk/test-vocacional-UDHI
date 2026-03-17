@@ -256,7 +256,7 @@ export default function Results() {
       {(() => {
         const archetype = getArchetype(results.hollandCode);
         return (
-          <div className="min-h-[80vh] flex items-center px-6 lg:px-16 py-16 bg-[#f0f4ff] print-hero-compact">
+          <div className="min-h-[80vh] flex items-center px-6 lg:px-16 py-16 bg-white print-hero-compact">
             <div className="w-full max-w-6xl mx-auto flex flex-col lg:flex-row items-center lg:items-end justify-between gap-12">
               {/* Left: Name + tagline */}
               <div className="lg:flex-1">
