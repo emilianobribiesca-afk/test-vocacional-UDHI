@@ -53,17 +53,27 @@ body {
     break-before: page;
   }
 
-  /* Hero: light bg for print */
+  /* Hero: light bg, centered for print */
   .print-hero-light {
     background: #f0f4ff !important;
     min-height: auto !important;
     padding: 32px 40px !important;
+  }
+  .print-hero-light > div {
+    flex-direction: column !important;
+    align-items: center !important;
+    text-align: center !important;
+    gap: 24px !important;
   }
   .print-hero-light h1,
   .print-hero-light div,
   .print-hero-light p,
   .print-hero-light span {
     color: #0D47A1 !important;
+  }
+  .print-hero-light p {
+    color: #4b5563 !important;
+    max-width: 100% !important;
   }
   .print-hero-light .print-hero-subtitle {
     color: #4b5563 !important;
