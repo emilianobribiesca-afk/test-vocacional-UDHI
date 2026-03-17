@@ -157,6 +157,7 @@ export default function Results() {
   const [loading, setLoading] = useState(true);
   const [showAllCareers, setShowAllCareers] = useState(false);
   const [fromLink, setFromLink] = useState(false);
+  const [studentName, setStudentName] = useState('');
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -166,13 +167,13 @@ export default function Results() {
       const params = new URLSearchParams(window.location.search);
       const encoded = params.get('d');
       if (encoded) {
-        // Convert base64url to base64 and add padding
         let base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
         while (base64.length % 4) base64 += '=';
         const decoded = JSON.parse(atob(base64));
         const reconstructed = reconstructResultsFromScores(decoded.s);
         setResults(reconstructed);
         setFromLink(true);
+        if (decoded.n) setStudentName(decoded.n);
         setLoading(false);
         return;
       }
@@ -224,7 +225,7 @@ export default function Results() {
             className="h-auto w-full max-w-[110px] logo-blue"
             priority
           />
-          <span className="text-sm text-gray-500">Resultados del Test</span>
+          <span className="text-sm text-gray-500">{studentName ? `Resultados de ${studentName}` : 'Resultados del Test'}</span>
         </div>
       </div>
 

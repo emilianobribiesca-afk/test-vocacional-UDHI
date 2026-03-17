@@ -8,8 +8,8 @@ export async function POST(request: Request) {
   try {
     const { userInfo, results } = await request.json();
 
-    // Generar URL con scores codificados
-    const payload = JSON.stringify({ s: results.scores });
+    // Generar URL con scores y nombre codificados
+    const payload = JSON.stringify({ s: results.scores, n: `${userInfo.nombre} ${userInfo.apellido}` });
     const encoded = Buffer.from(payload).toString('base64url');
     const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || 'https://testvocacionaludhi.com';
     const resultsUrl = `${baseUrl}/results?d=${encoded}`;
