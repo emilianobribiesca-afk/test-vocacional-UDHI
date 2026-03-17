@@ -288,7 +288,7 @@ export default function Results() {
       })()}
 
       {/* Top 3 tipos - cards grandes dedicadas */}
-      <div className="px-6 lg:px-12 py-10 lg:py-14 border-b border-gray-100 print-break-before">
+      <div className="px-6 lg:px-12 py-10 lg:py-14 border-b border-gray-100">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-2xl font-bold text-gray-900 mb-8">Tu Top 3</h2>
           <div className="grid lg:grid-cols-3 gap-6">
