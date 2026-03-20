@@ -99,7 +99,7 @@ export function generateCallCenterEmailHTML(
     </td>`;
   }).join('');
 
-  const now = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  const now = new Date().toLocaleDateString('es-MX', { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit', timeZone: 'America/Mexico_City' });
 
   return `<!DOCTYPE html>
 <html lang="es">
