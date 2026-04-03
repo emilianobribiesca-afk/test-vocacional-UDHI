@@ -30,14 +30,14 @@ export const professionalQuestions: Question[] = [
   // ==================== REALISTIC (R) - IDs 1-12 ====================
   { id: 1, text: 'Me gustaría reparar el motor de un automóvil', category: 'R', domain: 'activity' },
   { id: 2, text: 'Me gustaría cultivar hortalizas en un terreno agrícola', category: 'R', domain: 'activity' },
-  { id: 3, text: 'Me gustaría armar un mueble de madera con herramientas manuales', category: 'R', domain: 'activity' },
+  { id: 3, text: 'Me gustaría aplicar técnicas manuales como vendajes, masajes terapéuticos o primeros auxilios', category: 'R', domain: 'activity' },
   { id: 4, text: 'Me gustaría cablear una instalación eléctrica en una casa', category: 'R', domain: 'activity' },
   { id: 5, text: 'Soy bueno/a resolviendo fallas en aparatos electrónicos', category: 'R', domain: 'competency' },
   { id: 6, text: 'Soy bueno/a usando herramientas como taladro, sierra o soldadora', category: 'R', domain: 'competency' },
   { id: 7, text: 'Soy bueno/a armando y desarmando objetos mecánicos', category: 'R', domain: 'competency' },
   { id: 8, text: 'Soy bueno/a realizando actividades que requieren fuerza o resistencia física', category: 'R', domain: 'competency' },
   { id: 9, text: 'Me gustaría trabajar como técnico de mantenimiento industrial', category: 'R', domain: 'occupation' },
-  { id: 10, text: 'Me gustaría trabajar como operador de maquinaria de construcción', category: 'R', domain: 'occupation' },
+  { id: 10, text: 'Me gustaría trabajar como técnico/a que opera equipos de rayos X, ultrasonido o rehabilitación', category: 'R', domain: 'occupation' },
   { id: 11, text: 'Me gustaría trabajar como electricista o plomero profesional', category: 'R', domain: 'occupation' },
   { id: 12, text: 'Me gustaría trabajar como mecánico automotriz', category: 'R', domain: 'occupation' },
 
@@ -67,7 +67,7 @@ export const professionalQuestions: Question[] = [
   { id: 33, text: 'Me gustaría trabajar como artista visual o ilustrador/a', category: 'A', domain: 'occupation' },
   { id: 34, text: 'Me gustaría trabajar como músico/a, actor/actriz o bailarín/a', category: 'A', domain: 'occupation' },
   { id: 35, text: 'Me gustaría trabajar como director/a de cine o productor/a audiovisual', category: 'A', domain: 'occupation' },
-  { id: 36, text: 'Me gustaría trabajar como chef creativo/a o estilista de moda', category: 'A', domain: 'occupation' },
+  { id: 36, text: 'Me gustaría trabajar como estilista profesional, maquillista o diseñador/a de imagen personal', category: 'A', domain: 'occupation' },
 
   // ==================== SOCIAL (S) - IDs 37-48 ====================
   { id: 37, text: 'Me gustaría enseñar una materia a un grupo de estudiantes', category: 'S', domain: 'activity' },
@@ -95,7 +95,7 @@ export const professionalQuestions: Question[] = [
   { id: 57, text: 'Me gustaría trabajar como gerente o director/a de una empresa', category: 'E', domain: 'occupation' },
   { id: 58, text: 'Me gustaría trabajar como ejecutivo/a de ventas o marketing', category: 'E', domain: 'occupation' },
   { id: 59, text: 'Me gustaría trabajar como político/a o líder de una organización', category: 'E', domain: 'occupation' },
-  { id: 60, text: 'Me gustaría trabajar como organizador/a de eventos o productor/a de espectáculos', category: 'E', domain: 'occupation' },
+  { id: 60, text: 'Me gustaría trabajar como director/a de un centro deportivo, gimnasio o clínica de bienestar', category: 'E', domain: 'occupation' },
 
   // ==================== CONVENTIONAL (C) - IDs 61-72 ====================
   { id: 61, text: 'Me gustaría llevar el registro contable de ingresos y gastos de un negocio', category: 'C', domain: 'activity' },

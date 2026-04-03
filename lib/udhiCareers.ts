@@ -4,7 +4,7 @@
 export interface UDHICareer {
   id: string;
   name: string;
-  area: 'Salud' | 'Humanidades' | 'Negocios' | 'Ingenierías';
+  area: 'Salud' | 'Ciencias Sociales y Humanidades' | 'Negocios' | 'Ingenierías';
   riasecProfile: string; // Código Holland de 2-3 letras
   primaryTypes: string[]; // Tipos RIASEC primarios
   description: string;
@@ -112,12 +112,31 @@ export const udhiCareers: UDHICareer[] = [
     modalities: ['Escolarizada', 'Sabatina'],
     profileMatch: 'Personas apasionadas por el deporte con habilidades de liderazgo y gestión organizacional'
   },
+  {
+    id: 'puericultura',
+    name: 'Licenciatura en Puericultura',
+    area: 'Salud',
+    riasecProfile: 'SIA',
+    primaryTypes: ['S', 'I', 'A'],
+    description: 'Forma profesionales especializados en el desarrollo integral del niño desde la gestación hasta la adolescencia, abarcando aspectos físicos, cognitivos, emocionales y sociales.',
+    competencies: [
+      'Estimulación temprana y desarrollo infantil',
+      'Evaluación del desarrollo psicomotor',
+      'Diseño de programas educativos para la infancia',
+      'Orientación y asesoría familiar',
+      'Prevención y detección de problemas del desarrollo'
+    ],
+    workEnvironment: 'Guarderías, centros de desarrollo infantil, hospitales pediátricos, estancias infantiles, consultoría privada, instituciones educativas',
+    duration: '4 años',
+    modalities: ['Escolarizada', 'Sabatina'],
+    profileMatch: 'Personas con vocación de cuidado infantil, paciencia, creatividad y sensibilidad para acompañar el desarrollo de niños'
+  },
 
-  // ==================== ÁREA DE HUMANIDADES ====================
+  // ==================== ÁREA DE CIENCIAS SOCIALES Y HUMANIDADES ====================
   {
     id: 'criminologia-criminalistica',
     name: 'Licenciatura en Criminología y Criminalística',
-    area: 'Humanidades',
+    area: 'Ciencias Sociales y Humanidades',
     riasecProfile: 'IRC',
     primaryTypes: ['I', 'R', 'C'],
     description: 'Forma especialistas en el estudio del crimen, sus causas y la investigación científica de evidencias para el sistema de justicia.',
@@ -136,7 +155,7 @@ export const udhiCareers: UDHICareer[] = [
   {
     id: 'derecho',
     name: 'Licenciatura en Derecho',
-    area: 'Humanidades',
+    area: 'Ciencias Sociales y Humanidades',
     riasecProfile: 'ESC',
     primaryTypes: ['E', 'S', 'C'],
     description: 'Prepara abogados competentes en el conocimiento, interpretación y aplicación de las normas jurídicas para la defensa de derechos.',
@@ -155,7 +174,7 @@ export const udhiCareers: UDHICareer[] = [
   {
     id: 'arquitectura',
     name: 'Licenciatura en Arquitectura',
-    area: 'Humanidades',
+    area: 'Ciencias Sociales y Humanidades',
     riasecProfile: 'ARI',
     primaryTypes: ['A', 'R', 'I'],
     description: 'Forma diseñadores del espacio habitable que crean proyectos arquitectónicos funcionales, estéticos y sustentables.',
@@ -174,7 +193,7 @@ export const udhiCareers: UDHICareer[] = [
   {
     id: 'idiomas',
     name: 'Licenciatura en Idiomas',
-    area: 'Humanidades',
+    area: 'Ciencias Sociales y Humanidades',
     riasecProfile: 'SAI',
     primaryTypes: ['S', 'A', 'I'],
     description: 'Desarrolla profesionales multilingües capacitados en la enseñanza, traducción e interpretación de lenguas extranjeras.',
@@ -187,13 +206,13 @@ export const udhiCareers: UDHICareer[] = [
     ],
     workEnvironment: 'Instituciones educativas, empresas multinacionales, traducción, turismo, diplomacia',
     duration: '3 años',
-    modalities: ['Escolarizada', 'Sabatina'],
+    modalities: ['Escolarizada', 'Sabatina', '100% en línea'],
     profileMatch: 'Personas con facilidad para los idiomas, interés en otras culturas y habilidades comunicativas'
   },
   {
     id: 'educacion',
-    name: 'Licenciatura en Educación',
-    area: 'Humanidades',
+    name: 'Licenciatura en Ciencias de la Educación',
+    area: 'Ciencias Sociales y Humanidades',
     riasecProfile: 'SAI',
     primaryTypes: ['S', 'A', 'I'],
     description: 'Forma educadores comprometidos con procesos de enseñanza-aprendizaje innovadores y el desarrollo integral de las personas.',
@@ -212,7 +231,7 @@ export const udhiCareers: UDHICareer[] = [
   {
     id: 'diseno-interiores',
     name: 'Licenciatura en Diseño de Interiores',
-    area: 'Humanidades',
+    area: 'Ciencias Sociales y Humanidades',
     riasecProfile: 'ARI',
     primaryTypes: ['A', 'R', 'I'],
     description: 'Capacita diseñadores especializados en crear espacios interiores funcionales, estéticos y que mejoren la calidad de vida.',
@@ -265,7 +284,7 @@ export const udhiCareers: UDHICareer[] = [
     ],
     workEnvironment: 'Empresas privadas, sector público, consultoría, emprendimiento, multinacionales',
     duration: '4 años',
-    modalities: ['Escolarizada', 'Sabatina'],
+    modalities: ['Escolarizada', 'Sabatina', '100% en línea'],
     profileMatch: 'Personas con visión de negocios, habilidades de liderazgo y capacidad para tomar decisiones'
   },
   {
@@ -284,8 +303,46 @@ export const udhiCareers: UDHICareer[] = [
     ],
     workEnvironment: 'Despachos contables, empresas, auditoría, consultoría fiscal, sector financiero',
     duration: '3 años y 4 meses',
-    modalities: ['Escolarizada', 'Sabatina'],
+    modalities: ['Escolarizada', 'Sabatina', '100% en línea'],
     profileMatch: 'Personas analíticas, organizadas, con habilidades numéricas y atención al detalle'
+  },
+  {
+    id: 'economia-finanzas',
+    name: 'Licenciatura en Economía y Finanzas',
+    area: 'Negocios',
+    riasecProfile: 'CIE',
+    primaryTypes: ['C', 'I', 'E'],
+    description: 'Forma profesionales capaces de analizar fenómenos económicos, gestionar recursos financieros y diseñar estrategias de inversión y política económica.',
+    competencies: [
+      'Análisis macroeconómico y microeconómico',
+      'Gestión de portafolios de inversión',
+      'Modelado financiero y estadístico',
+      'Evaluación de proyectos de inversión',
+      'Política fiscal y monetaria'
+    ],
+    workEnvironment: 'Bancos, casas de bolsa, gobierno, organismos internacionales, consultoría financiera, empresas privadas',
+    duration: '3 años',
+    modalities: ['Escolarizada', 'Sabatina', '100% en línea'],
+    profileMatch: 'Personas con pensamiento analítico, interés en la economía global, habilidades matemáticas y visión estratégica'
+  },
+  {
+    id: 'marketing-digital',
+    name: 'Licenciatura en Marketing Digital',
+    area: 'Negocios',
+    riasecProfile: 'EAC',
+    primaryTypes: ['E', 'A', 'C'],
+    description: 'Desarrolla profesionales especializados en estrategias de mercadotecnia en medios digitales, comercio electrónico y gestión de marcas en el entorno online.',
+    competencies: [
+      'Estrategias de marketing en redes sociales',
+      'Publicidad digital y SEM/SEO',
+      'Creación de contenido y branding',
+      'Analítica web y métricas de rendimiento',
+      'Comercio electrónico y ventas online'
+    ],
+    workEnvironment: 'Agencias de marketing, empresas de comercio electrónico, startups, medios digitales, consultoría, freelance',
+    duration: '3 años',
+    modalities: ['Escolarizada', 'Sabatina', '100% en línea'],
+    profileMatch: 'Personas creativas con visión comercial, interés en tecnología digital y habilidades de comunicación persuasiva'
   },
 
   // ==================== ÁREA DE INGENIERÍAS ====================
@@ -305,7 +362,7 @@ export const udhiCareers: UDHICareer[] = [
     ],
     workEnvironment: 'Industria manufacturera, logística, producción, consultoría, plantas de fabricación',
     duration: '4 años',
-    modalities: ['Escolarizada', 'Sabatina'],
+    modalities: ['Escolarizada', 'Sabatina', '100% en línea'],
     profileMatch: 'Personas con pensamiento lógico, interés en la eficiencia y capacidad para resolver problemas complejos'
   },
   {
