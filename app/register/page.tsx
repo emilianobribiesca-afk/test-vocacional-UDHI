@@ -10,7 +10,8 @@ export default function Register() {
     nombre: '',
     apellido: '',
     email: '',
-    telefono: ''
+    telefono: '',
+    consentAccepted: false
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -43,6 +44,10 @@ export default function Register() {
       newErrors.telefono = 'El teléfono debe tener al menos 10 dígitos';
     }
 
+    if (!formData.consentAccepted) {
+      newErrors.consentAccepted = 'Debes autorizar el uso de tus datos para continuar';
+    }
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -65,8 +70,9 @@ export default function Register() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    const nextValue = type === 'checkbox' ? checked : value;
+    setFormData(prev => ({ ...prev, [name]: nextValue }));
     if (errors[name]) {
       setErrors(prev => ({ ...prev, [name]: '' }));
     }
@@ -184,6 +190,28 @@ export default function Register() {
               )}
             </div>
 
+            {/* Consentimiento */}
+            <div>
+              <label htmlFor="consentAccepted" className="flex items-start gap-3 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  id="consentAccepted"
+                  name="consentAccepted"
+                  checked={formData.consentAccepted}
+                  onChange={handleChange}
+                  className={`mt-0.5 h-5 w-5 flex-shrink-0 rounded border-2 ${
+                    errors.consentAccepted ? 'border-red-500' : 'border-gray-300'
+                  } text-[#1565C0] focus:ring-2 focus:ring-[#1565C0] cursor-pointer`}
+                />
+                <span className="text-sm text-gray-700 leading-snug">
+                  Autorizo el uso de mis datos para recibir los resultados del test y ser contactado(a) por UDHI.
+                </span>
+              </label>
+              {errors.consentAccepted && (
+                <p className="text-red-500 text-sm mt-1 ml-8">{errors.consentAccepted}</p>
+              )}
+            </div>
+
             {/* Submit Button */}
             <button
               type="submit"
@@ -209,11 +237,6 @@ export default function Register() {
                 </span>
               )}
             </button>
-
-            {/* Privacy */}
-            <p className="text-xs text-gray-500 text-center">
-              Tus datos serán utilizados únicamente para enviarte los resultados del test.
-            </p>
           </form>
         </div>
       </div>
