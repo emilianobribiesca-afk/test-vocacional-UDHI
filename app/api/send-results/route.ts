@@ -3,7 +3,7 @@ import { generateCallCenterEmailHTML } from '@/lib/emailTemplate';
 import type { DetailedResults } from '@/lib/professionalVocationalTestV3';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const RECIPIENT = 'gibrangoc15@gmail.com'; // demo, luego: callcenter_slp@udhi.edu.mx
+const RECIPIENT = 'callcenter_slp@udhi.edu.mx';
 
 const RIASEC_KEYS = ['R', 'I', 'A', 'S', 'E', 'C'] as const;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
